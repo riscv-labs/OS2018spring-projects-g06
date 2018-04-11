@@ -11,6 +11,16 @@
 
 ## 相关工作综述
 
+### RISC-V
+
+### sv6
+
+### 符号化执行
+
+### z3
+
+### commuter
+
 ## 设计方案
 
 本课程设计计划分为以下9个步骤进行：
@@ -32,11 +42,11 @@
 ## 参考文献
 
 1. sv6
-  GitHub: https://github.com/aclements/sv6
+  https://github.com/aclements/sv6
 
 2. Commuter
   https://pdos.csail.mit.edu/archive/commuter/
-  GitHub: https://github.com/aclements/commuter
+  https://github.com/aclements/commuter
 
 3. The RISC-V Instruction Set Manual Volume I: User-Level ISA
 
