@@ -1,0 +1,3426 @@
+{
+  "tests": {
+    "link_lseek": {
+      "pf8": {
+        "id": "link_lseek_pf8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_9", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_10", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_11", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_12", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf8_13", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf6": {
+        "id": "link_lseek_pf6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf6_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf6_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf6_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf6_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf6_4", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf6_5", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf6_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }
+        ]
+      }, 
+      "pf4": {
+        "id": "link_lseek_pf4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_3", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_4", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_6", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_7", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_9", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_10", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_11", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_12", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf4_13", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }
+        ]
+      }, 
+      "pf3": {
+        "id": "link_lseek_pf3", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf3_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf3_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf3_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf3_3", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf3_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf3_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf3_6", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf2": {
+        "id": "link_lseek_pf2", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf2_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_4", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_9", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_10", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_11", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_12", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf2_13", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf18": {
+        "id": "link_lseek_pf18", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf18_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf18_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf18_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf18_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf18_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf18_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf18_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf10": {
+        "id": "link_lseek_pf10", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf10_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_9", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_10", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_11", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_12", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf10_13", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf0": {
+        "id": "link_lseek_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pf0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf0_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf0_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pf0_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "link_lseek_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pe_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pe_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pe_2", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "link_lseek_pd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd8_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_2", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_3", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_4", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_5", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_6", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_7", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_8", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_9", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_10", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_11", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_12", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd8_13", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pd6": {
+        "id": "link_lseek_pd6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd6_0", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd6_1", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd6_2", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd6_3", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd6_4", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd6_5", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd6_6", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd4": {
+        "id": "link_lseek_pd4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd4_0", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_1", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_2", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_3", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_4", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_5", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_6", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_7", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_8", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_9", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_10", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_11", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_12", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd4_13", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd3": {
+        "id": "link_lseek_pd3", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd3_0", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd3_1", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd3_2", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd3_3", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd3_4", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd3_5", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd3_6", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd2": {
+        "id": "link_lseek_pd2", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd2_0", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_1", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_2", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_3", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_4", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_5", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_6", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_7", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_8", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_9", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_10", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_11", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_12", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd2_13", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd18": {
+        "id": "link_lseek_pd18", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd18_0", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd18_1", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd18_2", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd18_3", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd18_4", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd18_5", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd18_6", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd10": {
+        "id": "link_lseek_pd10", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd10_0", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_1", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_2", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_3", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_4", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_5", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_6", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_7", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_8", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_9", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_10", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_11", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_12", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd10_13", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd0": {
+        "id": "link_lseek_pd0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pd0_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd0_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd0_2", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd0_3", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd0_4", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd0_5", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pd0_6", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "link_lseek_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pc_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pc_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_pc_2", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pbc": {
+        "id": "link_lseek_pbc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "link_lseek_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb8_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb7": {
+        "id": "link_lseek_pb7", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb6": {
+        "id": "link_lseek_pb6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb6_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb6_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb5": {
+        "id": "link_lseek_pb5", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb4": {
+        "id": "link_lseek_pb4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb4_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb4_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb4_3", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb38": {
+        "id": "link_lseek_pb38", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb30": {
+        "id": "link_lseek_pb30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb30_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb30_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb28": {
+        "id": "link_lseek_pb28", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb20": {
+        "id": "link_lseek_pb20", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb20_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb20_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb20_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb20_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb1c": {
+        "id": "link_lseek_pb1c", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb18": {
+        "id": "link_lseek_pb18", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb18_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb18_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb14": {
+        "id": "link_lseek_pb14", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb10": {
+        "id": "link_lseek_pb10", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb10_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb10_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb10_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb10_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb08": {
+        "id": "link_lseek_pb08", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb00": {
+        "id": "link_lseek_pb00", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pb00_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_pb00_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa8": {
+        "id": "link_lseek_pa8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa0": {
+        "id": "link_lseek_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_pa0_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p9c": {
+        "id": "link_lseek_p9c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p98": {
+        "id": "link_lseek_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p98_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p98_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p98_2", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p98_3", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p97": {
+        "id": "link_lseek_p97", 
+        "diverge": "ab/ba state"
+      }, 
+      "p96": {
+        "id": "link_lseek_p96", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p96_0", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p96_1", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p95": {
+        "id": "link_lseek_p95", 
+        "diverge": "ab/ba state"
+      }, 
+      "p94": {
+        "id": "link_lseek_p94", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p94_0", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p94_1", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p94_2", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p94_3", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p938": {
+        "id": "link_lseek_p938", 
+        "diverge": "ab/ba state"
+      }, 
+      "p930": {
+        "id": "link_lseek_p930", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p930_0", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p930_1", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p928": {
+        "id": "link_lseek_p928", 
+        "diverge": "ab/ba state"
+      }, 
+      "p920": {
+        "id": "link_lseek_p920", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p920_0", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p920_1", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p920_2", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p920_3", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p91c": {
+        "id": "link_lseek_p91c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p918": {
+        "id": "link_lseek_p918", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p918_0", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p918_1", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p914": {
+        "id": "link_lseek_p914", 
+        "diverge": "ab/ba state"
+      }, 
+      "p910": {
+        "id": "link_lseek_p910", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p910_0", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p910_1", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p910_2", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p910_3", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p908": {
+        "id": "link_lseek_p908", 
+        "diverge": "ab/ba state"
+      }, 
+      "p900": {
+        "id": "link_lseek_p900", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p900_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p900_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p88": {
+        "id": "link_lseek_p88", 
+        "diverge": "ab/ba state"
+      }, 
+      "p80": {
+        "id": "link_lseek_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p80_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p7": {
+        "id": "link_lseek_p7", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p7_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p7_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "True", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p6c": {
+        "id": "link_lseek_p6c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p6c_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }
+        ]
+      }, 
+      "p68": {
+        "id": "link_lseek_p68", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p68_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p68_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_set": "True"
+            }
+          }
+        ]
+      }, 
+      "p66": {
+        "id": "link_lseek_p66", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p66_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p64": {
+        "id": "link_lseek_p64", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p64_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p64_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p63": {
+        "id": "link_lseek_p63", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p63_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p62": {
+        "id": "link_lseek_p62", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p62_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p62_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p60": {
+        "id": "link_lseek_p60", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p60_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.lseek.fd]": "False", 
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "link_lseek_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p4_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "False", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p3": {
+        "id": "link_lseek_p3", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p3_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "link_lseek_p3_1", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p2c": {
+        "id": "link_lseek_p2c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p2c_0", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p28": {
+        "id": "link_lseek_p28", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p28_0", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p28_1", 
+            "assignments": {
+              "b.lseek.whence_set": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "b.lseek.pid": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p26": {
+        "id": "link_lseek_p26", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p26_0", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p24": {
+        "id": "link_lseek_p24", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p24_0", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p24_1", 
+            "assignments": {
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "True", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p23": {
+        "id": "link_lseek_p23", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p23_0", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p22": {
+        "id": "link_lseek_p22", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p22_0", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }, 
+          {
+            "id": "link_lseek_p22_1", 
+            "assignments": {
+              "b.lseek.whence_end": "True", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p20": {
+        "id": "link_lseek_p20", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p20_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "link_lseek_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_lseek_p0_0", 
+            "assignments": {
+              "b.lseek.whence_end": "False", 
+              "b.lseek.whence_set": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.lseek.pid": "True", 
+              "b.lseek.whence_cur": "False", 
+              "Fs.proc1.fd_map._valid[b.lseek.fd]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

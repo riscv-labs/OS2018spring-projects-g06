@@ -1,0 +1,156 @@
+{
+  "tests": {
+    "lseek_reboot": {
+      "pc": {
+        "id": "lseek_reboot_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_pc_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_end": "False", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "lseek_reboot_pb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_pb_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "lseek_reboot_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_pa_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p98": {
+        "id": "lseek_reboot_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_p98_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "lseek_reboot_p90", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_p90_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8e": {
+        "id": "lseek_reboot_p8e", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_p8e_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_end": "True", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8c": {
+        "id": "lseek_reboot_p8c", 
+        "diverge": "a/ba result"
+      }, 
+      "p8a": {
+        "id": "lseek_reboot_p8a", 
+        "diverge": "a/ba result"
+      }, 
+      "p89": {
+        "id": "lseek_reboot_p89", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_p89_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_end": "True", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p88": {
+        "id": "lseek_reboot_p88", 
+        "diverge": "a/ba result"
+      }, 
+      "p80": {
+        "id": "lseek_reboot_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_p80_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_end": "False", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "lseek_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_reboot_p0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_end": "False", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

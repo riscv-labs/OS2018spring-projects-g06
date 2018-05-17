@@ -1,0 +1,116 @@
+{
+  "tests": {
+    "pipe_rename": {
+      "pf8": {
+        "id": "pipe_rename_pf8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf0": {
+        "id": "pipe_rename_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_rename_pf0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "pipe_rename_pe", 
+        "diverge": "a/ba result"
+      }, 
+      "pc": {
+        "id": "pipe_rename_pc", 
+        "diverge": "a/ba result"
+      }, 
+      "pbc": {
+        "id": "pipe_rename_pbc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "pipe_rename_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_rename_pb8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "pipe_rename_pb8_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "pipe_rename_pb0", 
+        "diverge": "a/ba result"
+      }, 
+      "pa": {
+        "id": "pipe_rename_pa", 
+        "diverge": "a/ba result"
+      }, 
+      "p9c": {
+        "id": "pipe_rename_p9c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p98": {
+        "id": "pipe_rename_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_rename_p98_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "pipe_rename_p90", 
+        "diverge": "a/ba result"
+      }, 
+      "p8": {
+        "id": "pipe_rename_p8", 
+        "diverge": "a/ba result"
+      }, 
+      "p7": {
+        "id": "pipe_rename_p7", 
+        "diverge": "ab/ba state"
+      }, 
+      "p6": {
+        "id": "pipe_rename_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_rename_p6_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "a.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "pipe_rename_p4", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "pipe_rename_p0", 
+        "diverge": "a/ba result"
+      }
+    }
+  }
+}

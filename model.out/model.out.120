@@ -1,0 +1,78 @@
+{
+  "tests": {
+    "memwrite_reboot": {
+      "pe": {
+        "id": "memwrite_reboot_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memwrite_reboot_pe_0", 
+            "assignments": {
+              "a.memwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "memwrite_reboot_pd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memwrite_reboot_pd8_0", 
+            "assignments": {
+              "a.memwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pd0": {
+        "id": "memwrite_reboot_pd0", 
+        "diverge": "a/ba result"
+      }, 
+      "pc8": {
+        "id": "memwrite_reboot_pc8", 
+        "diverge": "a/ba result"
+      }, 
+      "pc4": {
+        "id": "memwrite_reboot_pc4", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc0": {
+        "id": "memwrite_reboot_pc0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memwrite_reboot_pc0_0", 
+            "assignments": {
+              "a.memwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "memwrite_reboot_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memwrite_reboot_p8_0", 
+            "assignments": {
+              "a.memwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "memwrite_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memwrite_reboot_p0_0", 
+            "assignments": {
+              "a.memwrite.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

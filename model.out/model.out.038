@@ -1,0 +1,57 @@
+{
+  "tests": {
+    "fstat_sync": {
+      "pc": {
+        "id": "fstat_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_sync_pc_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_sync_pc_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "fstat_sync_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_sync_p8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "fstat_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_sync_p0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

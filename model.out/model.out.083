@@ -1,0 +1,436 @@
+{
+  "tests": {
+    "lseek_munmap": {
+      "pe": {
+        "id": "lseek_munmap_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_pe_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_pe_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "lseek_munmap_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_pc_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_pc_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb8": {
+        "id": "lseek_munmap_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_pb8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "b.munmap.pid": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "lseek_munmap_pb0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_pb0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "b.munmap.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pa8": {
+        "id": "lseek_munmap_pa8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_pa8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "b.munmap.pid": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_pa8_1", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "b.munmap.pid": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pa0": {
+        "id": "lseek_munmap_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_pa0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "b.munmap.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_pa0_1", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "b.munmap.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9c": {
+        "id": "lseek_munmap_p9c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p9c_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.munmap.pid": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p98": {
+        "id": "lseek_munmap_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p98_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.munmap.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p94": {
+        "id": "lseek_munmap_p94", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p94_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.munmap.pid": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_p94_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.munmap.pid": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "lseek_munmap_p90", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p90_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.munmap.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_p90_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.munmap.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8e": {
+        "id": "lseek_munmap_p8e", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p8e_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8c": {
+        "id": "lseek_munmap_p8c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p8c_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8a": {
+        "id": "lseek_munmap_p8a", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p8a_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_p8a_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p88": {
+        "id": "lseek_munmap_p88", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p88_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_munmap_p88_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p84": {
+        "id": "lseek_munmap_p84", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p84_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p80": {
+        "id": "lseek_munmap_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p80_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "lseek_munmap_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p4_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.va_map._valid[b.munmap.va]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "lseek_munmap_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_munmap_p0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "b.munmap.pid": "True", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "False", 
+              "Fs.proc1.va_map._valid[b.munmap.va]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

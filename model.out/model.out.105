@@ -1,0 +1,66 @@
+{
+  "tests": {
+    "memread_reboot": {
+      "pc": {
+        "id": "memread_reboot_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memread_reboot_pc_0", 
+            "assignments": {
+              "a.memread.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "memread_reboot_pb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memread_reboot_pb_0", 
+            "assignments": {
+              "a.memread.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "memread_reboot_pa", 
+        "diverge": "a/ba result"
+      }, 
+      "p9": {
+        "id": "memread_reboot_p9", 
+        "diverge": "a/ba result"
+      }, 
+      "p88": {
+        "id": "memread_reboot_p88", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memread_reboot_p88_0", 
+            "assignments": {
+              "a.memread.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p80": {
+        "id": "memread_reboot_p80", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "memread_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "memread_reboot_p0_0", 
+            "assignments": {
+              "a.memread.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

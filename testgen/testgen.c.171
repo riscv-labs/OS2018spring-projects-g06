@@ -1,0 +1,5750 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: open rename
+ */
+static int test_open_rename_pf8_0_0(void) {
+  int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+  expect_result("r", r, -1);
+  expect_errno(17);
+  return xerrno(r);
+}
+static int test_open_rename_pf8_0_1(void) {
+  int r = rename("__f1", "__f1");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_open_rename_pf8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+static void setup_open_rename_pf8_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_open_rename_pf8_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_open_rename_pf8_0_final(void) {
+  unlink("__i0");
+}
+static void setup_open_rename_pf8_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf8_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf8_1_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+static void setup_open_rename_pf8_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+static void setup_open_rename_pf8_1_final(void) {
+  unlink("__i1");
+  unlink("__i0");
+}
+// static void setup_open_rename_pf8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf8_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+static int test_open_rename_pf8_2_1(void) {
+  int r = rename("__f0", "__f0");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_open_rename_pf8_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf8_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf8_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pf8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+static int test_open_rename_pf6_0_1(void) {
+  int r = rename("__f1", "__f2");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_open_rename_pf6_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf6_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pf6_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+static int test_open_rename_pf6_1_1(void) {
+  int r = rename("__f1", "__f0");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static void setup_open_rename_pf6_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pf8_0_common
+// static void setup_open_rename_pf6_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pf6_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf6_2_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pf6_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i2", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf6_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+static void setup_open_rename_pf6_2_final(void) {
+  unlink("__i0");
+  unlink("__i2");
+  unlink("__i1");
+}
+// static void setup_open_rename_pf6_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_3_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf6_3_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pf6_3_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf6_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pf6_3_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_4_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf6_4_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_1_1
+// static void setup_open_rename_pf6_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pf8_1_common
+// static void setup_open_rename_pf6_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_4_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pf6_4_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_5_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf6_5_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pf6_5_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf6_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+static void setup_open_rename_pf6_5_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_open_rename_pf6_5_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf6_6_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf6_6_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pf6_6_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pf6_6_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf6_6_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_pf6_6_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf2_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf2_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_pf2_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pf8_0_common
+// static void setup_open_rename_pf2_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf2_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf2_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pf2_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pf2_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+// static int test_open_rename_pf2_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_pf2_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pf8_1_common
+// static void setup_open_rename_pf2_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf2_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pf2_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pf2_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pe_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_EXCL | O_CREAT, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_0
+static int test_open_rename_pe_0_1(void) {
+  int r = rename("__f1", "__f0");
+  expect_result("r", r, -1);
+  expect_errno(2);
+  return xerrno(r);
+}
+// static void setup_open_rename_pe_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pf8_2_common
+// static void setup_open_rename_pe_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pe_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pe_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pe_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+static int test_open_rename_pde_0_0(void) {
+  int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+  
+  return xerrno(r);
+}
+// static int test_open_rename_pde_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+static void setup_open_rename_pde_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pde_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pde_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pde_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pde_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pde_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pde_1_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+static void setup_open_rename_pde_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pde_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pde_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pde_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pde_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pde_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pde_2_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_2_1
+static void setup_open_rename_pde_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pde_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pde_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pde_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pde_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pdb8_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pdb8_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pdb8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pdb8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_0_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pdb8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pdb8_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pdb8_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pdb8_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pdb8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_1_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_pdb8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pdb8_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pdb8_2_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pdb8_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i2", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pdb8_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+static void setup_open_rename_pdb8_2_final(void) {
+  unlink("__i1");
+  unlink("__i2");
+  unlink("__i0");
+}
+// static void setup_open_rename_pdb8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pdb8_3_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pdb8_3_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pdb8_3_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pdb8_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pdb8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pdb8_4_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pdb8_4_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_1_1
+static void setup_open_rename_pdb8_4_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pdb8_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pdb8_4_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pdb8_5_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pdb8_5_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pdb8_5_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pdb8_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pdb8_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pdb8_5_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pd98_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pd98_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pd98_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pd98_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pd98_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pd98_0_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_pd98_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pd98_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pd98_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pd98_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pd98_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pd98_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pd98_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pd98_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pd4_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pd4_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+static void setup_open_rename_pd4_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pd4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pd4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pd4_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pd4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+static int test_open_rename_pce_0_0(void) {
+  int r = open("__f0", O_RDWR | O_CREAT, 0666);
+  
+  return xerrno(r);
+}
+// static int test_open_rename_pce_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+static void setup_open_rename_pce_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pce_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pce_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pce_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pce_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pce_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pce_1_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+// static void setup_open_rename_pce_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pde_1_common
+// static void setup_open_rename_pce_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pce_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pce_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pce_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pce_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pce_2_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_2_1
+static void setup_open_rename_pce_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pce_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pce_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pce_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pce_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pcb8_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pcb8_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pcb8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pcb8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pcb8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pcb8_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pcb8_1_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_1_1
+static void setup_open_rename_pcb8_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pcb8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pcb8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pcb8_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pcb8_2_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pcb8_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i2", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pcb8_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+static void setup_open_rename_pcb8_2_final(void) {
+  unlink("__i2");
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_open_rename_pcb8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pcb8_3_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pcb8_3_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pcb8_3_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pcb8_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_3_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_pcb8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pcb8_4_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pcb8_4_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pcb8_4_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pcb8_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_4_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pcb8_4_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pcb8_5_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pcb8_5_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pcb8_5_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pcb8_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pcb8_5_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_pcb8_5_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pc98_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pc98_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_pc98_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pce_0_common
+// static void setup_open_rename_pc98_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pc98_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pc98_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pc98_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pc98_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pc98_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pc98_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pc98_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pc98_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pc98_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_pc98_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pc4_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_pc4_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+// static void setup_open_rename_pc4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pce_2_common
+// static void setup_open_rename_pc4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pc4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pc4_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pc4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pbe_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pbe_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+static void setup_open_rename_pbe_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pbe_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pbe_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pbe_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pbe_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pb78_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pb78_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pb78_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pb78_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pb78_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pb78_0_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_pb78_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pb78_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pb78_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pb78_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pb78_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pb78_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pb78_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pb78_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pb30_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pb30_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_pb30_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_pb30_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pb30_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pb30_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_pb30_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_pa8_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pde_0_0
+// static int test_open_rename_pa8_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+static void setup_open_rename_pa8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_open_rename_pa8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pa8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_pa8_0_final(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+// static void setup_open_rename_pa8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p9e_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_p9e_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+// static void setup_open_rename_p9e_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pbe_0_common
+// static void setup_open_rename_p9e_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p9e_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p9e_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p9e_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p978_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_p978_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p978_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p978_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p978_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p978_0_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_p978_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p978_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_p978_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p978_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p978_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p978_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p978_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p978_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p930_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_p930_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p930_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p930_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p930_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p930_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p930_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p88_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_CREAT, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pce_0_0
+// static int test_open_rename_p88_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+// static void setup_open_rename_p88_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_open_rename_pa8_0_common
+// static void setup_open_rename_p88_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p88_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p88_0_final(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+// static void setup_open_rename_p88_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+static int test_open_rename_p7c_0_0(void) {
+  int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+  
+  return xerrno(r);
+}
+// static int test_open_rename_p7c_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+// static void setup_open_rename_p7c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pde_0_common
+// static void setup_open_rename_p7c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p7c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p7c_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p7c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p7c_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p7c_1_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+// static void setup_open_rename_p7c_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pde_1_common
+// static void setup_open_rename_p7c_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p7c_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p7c_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p7c_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p7c_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p7c_2_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_2_1
+// static void setup_open_rename_p7c_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pde_2_common
+// static void setup_open_rename_p7c_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p7c_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p7c_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p7c_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p770_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p770_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p770_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p770_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_0_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_p770_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p770_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p770_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p770_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i2", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p770_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i2");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pdb8_2_final
+// static void setup_open_rename_p770_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p770_2_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p770_2_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p770_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p770_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_2_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_p770_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p770_3_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p770_3_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_1_1
+// static void setup_open_rename_p770_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pcb8_1_common
+// static void setup_open_rename_p770_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_3_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p770_3_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p770_4_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p770_4_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p770_4_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p770_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_4_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p770_4_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p770_5_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p770_5_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p770_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f2");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pdb8_5_common
+// static void setup_open_rename_p770_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p770_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p770_5_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p730_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p730_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p730_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p730_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p730_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p730_0_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p730_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p730_1_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p730_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p730_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pde_0_common
+// static void setup_open_rename_p730_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p730_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p730_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p730_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p68_0_0(void) {
+//   int r = open("__f0", O_RDWR | O_TRUNC, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p7c_0_0
+// static int test_open_rename_p68_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+// static void setup_open_rename_p68_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pd4_0_common
+// static void setup_open_rename_p68_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p68_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p68_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p68_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+static int test_open_rename_p5c_0_0(void) {
+  int r = open("__f0", O_RDWR, 0666);
+  
+  return xerrno(r);
+}
+// static int test_open_rename_p5c_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+// static void setup_open_rename_p5c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pce_0_common
+// static void setup_open_rename_p5c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p5c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p5c_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p5c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p5c_1_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p5c_1_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+// static void setup_open_rename_p5c_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pc98_1_common
+// static void setup_open_rename_p5c_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p5c_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p5c_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p5c_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p5c_2_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p5c_2_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_2_1
+// static void setup_open_rename_p5c_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pd4_0_common
+// static void setup_open_rename_p5c_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p5c_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p5c_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p5c_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p570_0_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p570_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p570_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f2");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pcb8_0_common
+// static void setup_open_rename_p570_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p570_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p570_1_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p570_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p570_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i1", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p570_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p570_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p570_2_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p570_2_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p570_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i2", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i1", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i2", "__f1");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f2");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pcb8_2_common
+// static void setup_open_rename_p570_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_2_final(void) {
+//   unlink("__i2");
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pcb8_2_final
+// static void setup_open_rename_p570_2_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p570_3_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p570_3_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p570_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f2");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pcb8_4_common
+// static void setup_open_rename_p570_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p570_3_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p570_4_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p570_4_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p570_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i1", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f2");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pcb8_5_common
+// static void setup_open_rename_p570_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_4_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_p570_4_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p570_5_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p570_5_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_1_1
+// static void setup_open_rename_p570_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pcb8_1_common
+// static void setup_open_rename_p570_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p570_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p570_5_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p53_0_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p53_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p53_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pce_0_common
+// static void setup_open_rename_p53_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p53_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p53_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p53_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p53_1_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p53_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p53_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pc98_1_common
+// static void setup_open_rename_p53_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p53_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p53_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_1_final
+// static void setup_open_rename_p53_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p48_0_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p5c_0_0
+// static int test_open_rename_p48_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+// static void setup_open_rename_p48_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_pce_2_common
+// static void setup_open_rename_p48_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p48_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p48_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p48_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+static int test_open_rename_p3_0_0(void) {
+  int r = open("__f0", O_RDWR, 0666);
+  expect_result("r", r, -1);
+  expect_errno(2);
+  return xerrno(r);
+}
+// static int test_open_rename_p3_0_1(void) {
+//   int r = rename("__f1", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf8_0_1
+static void setup_open_rename_p3_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p3_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p3_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p3_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p3_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p28_0_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p3_0_0
+// static int test_open_rename_p28_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p28_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p28_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p28_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p28_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p28_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p28_1_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p3_0_0
+// static int test_open_rename_p28_1_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+static void setup_open_rename_p28_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f2");
+  if (r < 0) setup_error("link");
+}
+// static void setup_open_rename_p28_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p28_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p28_1_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_open_rename_pf6_5_final
+// static void setup_open_rename_p28_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p20_0_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p3_0_0
+// static int test_open_rename_p20_0_1(void) {
+//   int r = rename("__f1", "__f2");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pf6_0_1
+// static void setup_open_rename_p20_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_open_rename_p3_0_common
+// static void setup_open_rename_p20_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p20_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p20_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_open_rename_pf8_0_final
+// static void setup_open_rename_p20_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p0_0_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p3_0_0
+// static int test_open_rename_p0_0_1(void) {
+//   int r = rename("__f1", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_pe_0_1
+// static void setup_open_rename_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_open_rename_pa8_0_common
+// static void setup_open_rename_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p0_0_final(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+// static void setup_open_rename_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+/*
+ * calls: open rename
+ */
+// static int test_open_rename_p0_1_0(void) {
+//   int r = open("__f0", O_RDWR, 0666);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_open_rename_p3_0_0
+static int test_open_rename_p0_1_1(void) {
+  int r = rename("__f0", "__f0");
+  expect_result("r", r, -1);
+  expect_errno(2);
+  return xerrno(r);
+}
+// static void setup_open_rename_p0_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_open_rename_pa8_0_common
+// static void setup_open_rename_p0_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p0_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_open_rename_pf8_0_proc1
+// static void setup_open_rename_p0_1_final(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+// static void setup_open_rename_p0_1_procfinal(void) {
+//   
+// }
+// ^ See setup_open_rename_pf8_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-open_rename_pf8_0",
+    &setup_open_rename_pf8_0_common,
+    { { &setup_open_rename_pf8_0_proc0 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf8_1",
+    &setup_open_rename_pf8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf8_2",
+    &setup_open_rename_pf8_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf8_2_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_0",
+    &setup_open_rename_pf6_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_1",
+    &setup_open_rename_pf8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_1_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_2",
+    &setup_open_rename_pf6_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_2_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_3",
+    &setup_open_rename_pf6_3_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_4",
+    &setup_open_rename_pf8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_1_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_5",
+    &setup_open_rename_pf6_5_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf6_6",
+    &setup_open_rename_pf6_6_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf2_0",
+    &setup_open_rename_pf8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pf2_1",
+    &setup_open_rename_pf8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pe_0",
+    &setup_open_rename_pf8_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pf8_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pde_0",
+    &setup_open_rename_pde_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pde_1",
+    &setup_open_rename_pde_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pde_2",
+    &setup_open_rename_pde_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf8_2_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pdb8_0",
+    &setup_open_rename_pdb8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pdb8_1",
+    &setup_open_rename_pdb8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pdb8_2",
+    &setup_open_rename_pdb8_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pdb8_2_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pdb8_3",
+    &setup_open_rename_pdb8_3_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pdb8_4",
+    &setup_open_rename_pdb8_4_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_1_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pdb8_5",
+    &setup_open_rename_pdb8_5_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pd98_0",
+    &setup_open_rename_pd98_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pd98_1",
+    &setup_open_rename_pd98_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pd4_0",
+    &setup_open_rename_pd4_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pce_0",
+    &setup_open_rename_pce_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pce_1",
+    &setup_open_rename_pde_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pce_2",
+    &setup_open_rename_pce_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf8_2_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pcb8_0",
+    &setup_open_rename_pcb8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pcb8_1",
+    &setup_open_rename_pcb8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_1_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pcb8_2",
+    &setup_open_rename_pcb8_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pcb8_2_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pcb8_3",
+    &setup_open_rename_pcb8_3_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pcb8_4",
+    &setup_open_rename_pcb8_4_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pcb8_5",
+    &setup_open_rename_pcb8_5_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pc98_0",
+    &setup_open_rename_pce_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pc98_1",
+    &setup_open_rename_pc98_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pc4_0",
+    &setup_open_rename_pce_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pbe_0",
+    &setup_open_rename_pbe_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pb78_0",
+    &setup_open_rename_pb78_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pb78_1",
+    &setup_open_rename_pb78_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pb30_0",
+    &setup_open_rename_pb30_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_pa8_0",
+    &setup_open_rename_pa8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_procfinal,
+    { { &test_open_rename_pde_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p9e_0",
+    &setup_open_rename_pbe_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p978_0",
+    &setup_open_rename_p978_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p978_1",
+    &setup_open_rename_p978_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p930_0",
+    &setup_open_rename_p930_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p88_0",
+    &setup_open_rename_pa8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_procfinal,
+    { { &test_open_rename_pce_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p7c_0",
+    &setup_open_rename_pde_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p7c_1",
+    &setup_open_rename_pde_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p7c_2",
+    &setup_open_rename_pde_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf8_2_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p770_0",
+    &setup_open_rename_p770_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p770_1",
+    &setup_open_rename_p770_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pdb8_2_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p770_2",
+    &setup_open_rename_p770_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p770_3",
+    &setup_open_rename_pcb8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_1_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p770_4",
+    &setup_open_rename_p770_4_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p770_5",
+    &setup_open_rename_pdb8_5_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p730_0",
+    &setup_open_rename_p730_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p730_1",
+    &setup_open_rename_pde_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p68_0",
+    &setup_open_rename_pd4_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p7c_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p5c_0",
+    &setup_open_rename_pce_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p5c_1",
+    &setup_open_rename_pc98_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p5c_2",
+    &setup_open_rename_pd4_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf8_2_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p570_0",
+    &setup_open_rename_pcb8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p570_1",
+    &setup_open_rename_p570_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p570_2",
+    &setup_open_rename_pcb8_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pcb8_2_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p570_3",
+    &setup_open_rename_pcb8_4_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p570_4",
+    &setup_open_rename_pcb8_5_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p570_5",
+    &setup_open_rename_pcb8_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_1_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p53_0",
+    &setup_open_rename_pce_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p53_1",
+    &setup_open_rename_pc98_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_1_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p48_0",
+    &setup_open_rename_pce_2_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p5c_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p3_0",
+    &setup_open_rename_p3_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p3_0_0, 0, "open" },
+      { &test_open_rename_pf8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p28_0",
+    &setup_open_rename_p28_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p3_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p28_1",
+    &setup_open_rename_p28_1_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf6_5_final,
+    { { &test_open_rename_p3_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p20_0",
+    &setup_open_rename_p3_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_final,
+    { { &test_open_rename_p3_0_0, 0, "open" },
+      { &test_open_rename_pf6_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p0_0",
+    &setup_open_rename_pa8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_procfinal,
+    { { &test_open_rename_p3_0_0, 0, "open" },
+      { &test_open_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-open_rename_p0_1",
+    &setup_open_rename_pa8_0_common,
+    { { &setup_open_rename_pf8_0_proc1 }, { &setup_open_rename_pf8_0_proc1 } },
+    &setup_open_rename_pf8_0_procfinal,
+    &setup_open_rename_pf8_0_procfinal,
+    { { &test_open_rename_p3_0_0, 0, "open" },
+      { &test_open_rename_p0_1_1, 0, "rename" } },
+    &cleanup },
+//+++ common
+  {}
+};

@@ -1,0 +1,66 @@
+{
+  "tests": {
+    "mprotect_sync": {
+      "p8": {
+        "id": "mprotect_sync_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_sync_p8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_sync_p8_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_sync_p8_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_sync_p8_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "mprotect_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_sync_p0_0", 
+            "assignments": {
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "tests": {
+    "sync_unlink": {
+      "p8": {
+        "id": "sync_unlink_p8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p0": {
+        "id": "sync_unlink_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "sync_unlink_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

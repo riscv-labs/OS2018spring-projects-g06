@@ -1,0 +1,4419 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_pf8_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+  expect_result("r", r, 1250999402496);
+  return xerrno(r);
+}
+static int test_mmap_pipe_pf8_0_1(void) {
+  int fds[2];
+  int r = pipe(fds);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_mmap_pipe_pf8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+static void setup_mmap_pipe_pf8_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_mmap_pipe_pf8_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_mmap_pipe_pf8_0_final(void) {
+  
+}
+static void setup_mmap_pipe_pf8_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+static void setup_mmap_pipe_pf8_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_mmap_pipe_pf8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_1_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_pf8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_2_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mmap_pipe_pf8_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x2000);
+}
+// static void setup_mmap_pipe_pf8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+static void setup_mmap_pipe_pf8_2_final(void) {
+  unlink("__i0");
+}
+// static void setup_mmap_pipe_pf8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_3_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_3_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mmap_pipe_pf8_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 9347072, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_pf8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_3_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pf8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_4_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+static void setup_mmap_pipe_pf8_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_mmap_pipe_pf8_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_4_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_pf8_4_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_5_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_5_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_pf8_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x261000);
+}
+// static void setup_mmap_pipe_pf8_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pf8_5_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_6_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_6_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_6_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_6_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_mmap_pipe_pf8_6_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_mmap_pipe_pf8_6_final(void) {
+  unlink("__i0");
+  close(20);
+  close(21);
+}
+static void setup_mmap_pipe_pf8_6_procfinal(void) {
+  close(20);
+  close(21);
+}
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_7_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_7_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_7_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+// static void setup_mmap_pipe_pf8_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_7_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_7_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_8_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_8_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_pf8_8_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 9347072, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_mmap_pipe_pf8_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_8_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pf8_8_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_9_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_9_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_pf8_9_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 9347072, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 0, "__i0", 0x20ad000);
+}
+// static void setup_mmap_pipe_pf8_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_9_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pf8_9_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_10_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_10_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_pf8_10_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 9347072, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_mmap_pipe_pf8_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_10_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pf8_10_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_11_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_11_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_pf8_11_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 9347072, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 1, "__i0", 0x20ad000);
+}
+// static void setup_mmap_pipe_pf8_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pf8_11_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pf8_11_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_12_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_12_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_12_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_12_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_mmap_pipe_pf8_12_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_12_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_12_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_13_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_13_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_13_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_7_common
+static void setup_mmap_pipe_pf8_13_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i0", 0x8ea000);
+}
+// static void setup_mmap_pipe_pf8_13_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_13_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_13_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_14_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_14_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_14_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_14_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i0", 0x704000);
+}
+// static void setup_mmap_pipe_pf8_14_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_14_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_14_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_15_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_15_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_15_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_14_common
+static void setup_mmap_pipe_pf8_15_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i0", 0x1c1000);
+}
+static void setup_mmap_pipe_pf8_15_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+}
+// static void setup_mmap_pipe_pf8_15_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_15_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_16_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_16_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_16_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_16_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_mmap_pipe_pf8_16_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_16_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_16_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_17_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_17_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_17_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_17_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_mmap_pipe_pf8_17_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_17_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_17_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_18_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_18_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pf8_18_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_mmap_pipe_pf8_18_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i0", 0x1c1000);
+}
+// static void setup_mmap_pipe_pf8_18_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_18_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_18_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pf8_19_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pf8_19_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pf8_19_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+static void setup_mmap_pipe_pf8_19_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_mmap_pipe_pf8_19_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pf8_19_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pf8_19_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pd8_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pd8_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pd8_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_pd8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pd8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pd8_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_pd8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pd8_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pd8_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pd8_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_pd8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_mmap_pipe_pf8_1_proc0
+// static void setup_mmap_pipe_pd8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pd8_1_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_pd8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pd8_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pd8_2_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pd8_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_2_common
+// static void setup_mmap_pipe_pd8_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x2000);
+// }
+// ^ See setup_mmap_pipe_pf8_2_proc0
+// static void setup_mmap_pipe_pd8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pd8_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pd8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pd8_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pd8_3_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pd8_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_pd8_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_mmap_pipe_pf8_4_proc0
+// static void setup_mmap_pipe_pd8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pd8_3_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_pd8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pd8_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_0
+// static int test_mmap_pipe_pd8_4_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pd8_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_2_common
+static void setup_mmap_pipe_pd8_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x2000);
+}
+// static void setup_mmap_pipe_pd8_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pd8_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pd8_4_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_pbe_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+  expect_result("r", r, -1);
+  expect_errno(19);
+  return xerrno(r);
+}
+// static int test_mmap_pipe_pbe_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pbe_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+// static void setup_mmap_pipe_pbe_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_7_proc0
+// static void setup_mmap_pipe_pbe_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pbe_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pbe_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pbe_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(19);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pbe_0_0
+// static int test_mmap_pipe_pbe_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pbe_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+// static void setup_mmap_pipe_pbe_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc0
+// static void setup_mmap_pipe_pbe_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pbe_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pbe_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pb6_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(19);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pbe_0_0
+// static int test_mmap_pipe_pb6_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pb6_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_14_common
+// static void setup_mmap_pipe_pb6_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc0
+// static void setup_mmap_pipe_pb6_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pb6_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pb6_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pb6_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(19);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pbe_0_0
+// static int test_mmap_pipe_pb6_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pb6_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pbe_0_common
+// static void setup_mmap_pipe_pb6_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_7_proc0
+// static void setup_mmap_pipe_pb6_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_pb6_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_pb6_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_pae_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+  expect_result("r", r, 1250999402496);
+  return xerrno(r);
+}
+// static int test_mmap_pipe_pae_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_pae_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mmap_pipe_pae_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 33169408, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_pae_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pae_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pae_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_pa6_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, 1250999402496);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pae_0_0
+// static int test_mmap_pipe_pa6_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_pa6_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+// static void setup_mmap_pipe_pa6_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 9347072, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_proc0
+// static void setup_mmap_pipe_pa6_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_pa6_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_pa6_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p9c_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+  expect_result("r", r, -1);
+  expect_errno(9);
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p9c_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p9c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p9c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p9c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p9c_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p9c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p8c_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED | MAP_FIXED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p9c_0_0
+// static int test_mmap_pipe_p8c_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p8c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p8c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p8c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p8c_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p8c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p7c_0_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p7c_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p7c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p7c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p7c_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p7c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p7c_1_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p7c_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p7c_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p7c_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p7c_1_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p7c_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p7c_2_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_0_0
+// static int test_mmap_pipe_p7c_2_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pae_0_common
+static void setup_mmap_pipe_p7c_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 1839104, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p7c_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p7c_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p7c_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p7c_3_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_1_0
+// static int test_mmap_pipe_p7c_3_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pae_0_common
+// static void setup_mmap_pipe_p7c_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 1839104, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_p7c_2_proc0
+// static void setup_mmap_pipe_p7c_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p7c_3_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p7c_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p7c_4_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_0_0
+// static int test_mmap_pipe_p7c_4_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_p7c_4_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fds[1], dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fds[0]);
+  close(fds[1]);
+}
+// static void setup_mmap_pipe_p7c_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_7_proc0
+// static void setup_mmap_pipe_p7c_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p7c_4_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p7c_4_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p7c_5_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_0_0
+// static int test_mmap_pipe_p7c_5_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+// static void setup_mmap_pipe_p7c_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc0
+// static void setup_mmap_pipe_p7c_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p7c_5_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p7c_5_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p7c_6_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_1_0
+// static int test_mmap_pipe_p7c_6_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+// static void setup_mmap_pipe_p7c_6_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc0
+// static void setup_mmap_pipe_p7c_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p7c_6_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p7c_6_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p7c_7_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_1_0
+// static int test_mmap_pipe_p7c_7_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p7c_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+// static void setup_mmap_pipe_p7c_7_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_7_proc0
+// static void setup_mmap_pipe_p7c_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p7c_7_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p7c_7_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p5c_0_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_0_0
+// static int test_mmap_pipe_p5c_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p5c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p5c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p5c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p5c_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p5c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p5c_1_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p7c_1_0
+// static int test_mmap_pipe_p5c_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p5c_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p5c_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p5c_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p5c_1_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p5c_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p3e_0_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x0UL);
+  expect_result("r", r, -1);
+  expect_errno(19);
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p3e_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p3e_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+// static void setup_mmap_pipe_p3e_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_7_proc0
+// static void setup_mmap_pipe_p3e_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p3e_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p3e_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p3e_1_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(19);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p3e_0_0
+// static int test_mmap_pipe_p3e_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p3e_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_17_common
+// static void setup_mmap_pipe_p3e_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc0
+// static void setup_mmap_pipe_p3e_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p3e_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p3e_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p36_0_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(19);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p3e_0_0
+// static int test_mmap_pipe_p36_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p36_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_12_common
+// static void setup_mmap_pipe_p36_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc0
+// static void setup_mmap_pipe_p36_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p36_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p36_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p36_1_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(19);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p3e_0_0
+// static int test_mmap_pipe_p36_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p36_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fds[1], dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_mmap_pipe_pf8_12_common
+// static void setup_mmap_pipe_p36_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_7_proc0
+// static void setup_mmap_pipe_p36_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_mmap_pipe_pf8_6_proc1
+// static void setup_mmap_pipe_p36_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_final
+// static void setup_mmap_pipe_p36_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_mmap_pipe_pf8_6_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p2f0_0_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x20ae000UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p2f0_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p2f0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+// static void setup_mmap_pipe_p2f0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 9347072, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_proc0
+// static void setup_mmap_pipe_p2f0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p2f0_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p2f0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p2f0_1_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, 10, 0x1c2000UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p2f0_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_p2f0_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mmap_pipe_p2f0_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 2494464, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p2f0_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p2f0_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p2f0_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p2f0_2_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x20ae000UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p2f0_0_0
+// static int test_mmap_pipe_p2f0_2_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p2f0_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pae_0_common
+static void setup_mmap_pipe_p2f0_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 34267136, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p2f0_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p2f0_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p2f0_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p2f0_3_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, 10, 0x20ae000UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p2f0_3_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p2f0_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pae_0_common
+// static void setup_mmap_pipe_p2f0_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 34267136, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_p2f0_2_proc0
+// static void setup_mmap_pipe_p2f0_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p2f0_3_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p2f0_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p270_0_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x705000UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p270_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+static void setup_mmap_pipe_p270_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mmap_pipe_p270_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 34263040, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p270_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p270_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p270_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p270_1_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, 10, 0x0UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p270_1_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p270_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_p270_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 20480, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p270_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p270_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p270_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p270_2_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x262000UL);
+  
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p270_2_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p270_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_p270_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 2498560, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p270_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p270_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p270_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p270_3_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, 10, 0x0UL);
+//   
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p270_1_0
+// static int test_mmap_pipe_p270_3_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p270_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mmap_pipe_pf8_3_common
+static void setup_mmap_pipe_p270_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_mmap_pipe_p270_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p270_3_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mmap_pipe_pf8_2_final
+// static void setup_mmap_pipe_p270_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+static int test_mmap_pipe_p1c_0_0(void) {
+  int* va = (int*) 0x0UL;
+  long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x0UL);
+  expect_result("r", r, -1);
+  expect_errno(9);
+  return xerrno(r);
+}
+// static int test_mmap_pipe_p1c_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p1c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p1c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p1c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p1c_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p1c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+/*
+ * calls: mmap pipe
+ */
+// static int test_mmap_pipe_p0c_0_0(void) {
+//   int* va = (int*) 0x0UL;
+//   long r = (intptr_t) mmap(va, 4096, PROT_READ, MAP_SHARED, 10, 0x0UL);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_p1c_0_0
+// static int test_mmap_pipe_p0c_0_1(void) {
+//   int fds[2];
+//   int r = pipe(fds);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mmap_pipe_pf8_0_1
+// static void setup_mmap_pipe_p0c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_common
+// static void setup_mmap_pipe_p0c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p0c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mmap_pipe_pf8_0_proc1
+// static void setup_mmap_pipe_p0c_0_final(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+// static void setup_mmap_pipe_p0c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mmap_pipe_pf8_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-mmap_pipe_pf8_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_1",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_1_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_2",
+    &setup_mmap_pipe_pf8_2_common,
+    { { &setup_mmap_pipe_pf8_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_3",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_3_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_4",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_4_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_5",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_5_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_6",
+    &setup_mmap_pipe_pf8_6_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_7",
+    &setup_mmap_pipe_pf8_7_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_8",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_8_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_9",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_9_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_10",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_10_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_11",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_11_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_12",
+    &setup_mmap_pipe_pf8_12_common,
+    { { &setup_mmap_pipe_pf8_12_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_13",
+    &setup_mmap_pipe_pf8_7_common,
+    { { &setup_mmap_pipe_pf8_13_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_14",
+    &setup_mmap_pipe_pf8_14_common,
+    { { &setup_mmap_pipe_pf8_14_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_15",
+    &setup_mmap_pipe_pf8_14_common,
+    { { &setup_mmap_pipe_pf8_15_proc0 }, { &setup_mmap_pipe_pf8_15_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_16",
+    &setup_mmap_pipe_pf8_16_common,
+    { { &setup_mmap_pipe_pf8_16_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_17",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_17_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_18",
+    &setup_mmap_pipe_pf8_18_common,
+    { { &setup_mmap_pipe_pf8_18_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pf8_19",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_19_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pd8_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pd8_1",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_1_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pd8_2",
+    &setup_mmap_pipe_pf8_2_common,
+    { { &setup_mmap_pipe_pf8_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pd8_3",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_4_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pd8_4",
+    &setup_mmap_pipe_pf8_2_common,
+    { { &setup_mmap_pipe_pd8_4_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pf8_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pbe_0",
+    &setup_mmap_pipe_pbe_0_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pbe_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pbe_1",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pbe_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pb6_0",
+    &setup_mmap_pipe_pf8_14_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pbe_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pb6_1",
+    &setup_mmap_pipe_pbe_0_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_pbe_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pae_0",
+    &setup_mmap_pipe_pae_0_common,
+    { { &setup_mmap_pipe_pae_0_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pae_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_pa6_0",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_3_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_pae_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p9c_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p9c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p8c_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p9c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p7c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_1",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p7c_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_2",
+    &setup_mmap_pipe_pae_0_common,
+    { { &setup_mmap_pipe_p7c_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p7c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_3",
+    &setup_mmap_pipe_pae_0_common,
+    { { &setup_mmap_pipe_p7c_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p7c_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_4",
+    &setup_mmap_pipe_p7c_4_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p7c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_5",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p7c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_6",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p7c_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p7c_7",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p7c_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p5c_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p7c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p5c_1",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p7c_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p3e_0",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p3e_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p3e_1",
+    &setup_mmap_pipe_pf8_17_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p3e_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p36_0",
+    &setup_mmap_pipe_pf8_12_common,
+    { { &setup_mmap_pipe_pf8_6_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p3e_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p36_1",
+    &setup_mmap_pipe_pf8_12_common,
+    { { &setup_mmap_pipe_pf8_7_proc0 }, { &setup_mmap_pipe_pf8_6_proc1 } },
+    &setup_mmap_pipe_pf8_6_procfinal,
+    &setup_mmap_pipe_pf8_6_final,
+    { { &test_mmap_pipe_p3e_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p2f0_0",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_pf8_3_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p2f0_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p2f0_1",
+    &setup_mmap_pipe_p2f0_1_common,
+    { { &setup_mmap_pipe_p2f0_1_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p2f0_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p2f0_2",
+    &setup_mmap_pipe_pae_0_common,
+    { { &setup_mmap_pipe_p2f0_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p2f0_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p2f0_3",
+    &setup_mmap_pipe_pae_0_common,
+    { { &setup_mmap_pipe_p2f0_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p2f0_3_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p270_0",
+    &setup_mmap_pipe_p270_0_common,
+    { { &setup_mmap_pipe_p270_0_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p270_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p270_1",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_p270_1_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p270_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p270_2",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_p270_2_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p270_2_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p270_3",
+    &setup_mmap_pipe_pf8_3_common,
+    { { &setup_mmap_pipe_p270_3_proc0 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_2_final,
+    { { &test_mmap_pipe_p270_1_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p1c_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p1c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 0, "pipe" } },
+    &cleanup },
+  { "fs-mmap_pipe_p0c_0",
+    &setup_mmap_pipe_pf8_0_common,
+    { { &setup_mmap_pipe_pf8_0_proc1 }, { &setup_mmap_pipe_pf8_0_proc1 } },
+    &setup_mmap_pipe_pf8_0_procfinal,
+    &setup_mmap_pipe_pf8_0_procfinal,
+    { { &test_mmap_pipe_p1c_0_0, 0, "mmap" },
+      { &test_mmap_pipe_pf8_0_1, 1, "pipe" } },
+    &cleanup },
+//+++ common
+  {}
+};

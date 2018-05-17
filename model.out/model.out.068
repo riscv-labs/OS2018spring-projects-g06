@@ -1,0 +1,190 @@
+{
+  "tests": {
+    "link_pipe": {
+      "pfc": {
+        "id": "link_pipe_pfc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf8": {
+        "id": "link_pipe_pf8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_pipe_pf8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }, 
+          {
+            "id": "link_pipe_pf8_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }, 
+          {
+            "id": "link_pipe_pf8_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pf0": {
+        "id": "link_pipe_pf0", 
+        "diverge": "ab/b result"
+      }, 
+      "pe": {
+        "id": "link_pipe_pe", 
+        "diverge": "ab/b result"
+      }, 
+      "pdc": {
+        "id": "link_pipe_pdc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pd8": {
+        "id": "link_pipe_pd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_pipe_pd8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }, 
+          {
+            "id": "link_pipe_pd8_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }, 
+          {
+            "id": "link_pipe_pd8_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pd0": {
+        "id": "link_pipe_pd0", 
+        "diverge": "ab/b result"
+      }, 
+      "pc": {
+        "id": "link_pipe_pc", 
+        "diverge": "ab/b result"
+      }, 
+      "pbc": {
+        "id": "link_pipe_pbc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "link_pipe_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_pipe_pb8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "link_pipe_pb0", 
+        "diverge": "ab/b result"
+      }, 
+      "pa": {
+        "id": "link_pipe_pa", 
+        "diverge": "ab/b result"
+      }, 
+      "p9c": {
+        "id": "link_pipe_p9c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p98": {
+        "id": "link_pipe_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_pipe_p98_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "link_pipe_p90", 
+        "diverge": "ab/b result"
+      }, 
+      "p8": {
+        "id": "link_pipe_p8", 
+        "diverge": "ab/b result"
+      }, 
+      "p78": {
+        "id": "link_pipe_p78", 
+        "diverge": "ab/ba state"
+      }, 
+      "p70": {
+        "id": "link_pipe_p70", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_pipe_p70_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "link_pipe_p6", 
+        "diverge": "ab/b result"
+      }, 
+      "p4": {
+        "id": "link_pipe_p4", 
+        "diverge": "ab/b result"
+      }, 
+      "p38": {
+        "id": "link_pipe_p38", 
+        "diverge": "ab/ba state"
+      }, 
+      "p30": {
+        "id": "link_pipe_p30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_pipe_p30_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p2": {
+        "id": "link_pipe_p2", 
+        "diverge": "ab/b result"
+      }, 
+      "p0": {
+        "id": "link_pipe_p0", 
+        "diverge": "ab/b result"
+      }
+    }
+  }
+}

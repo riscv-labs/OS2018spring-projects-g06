@@ -1,0 +1,1056 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: memwrite unlink
+ */
+static int test_memwrite_unlink_pf0_0_0(void) {
+  char* p = (char*) 0x12345600000UL;
+  int signal, r = 0;
+  pf_active = 1;
+  if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+    r = -1;
+  else
+    *p = 0;
+  pf_active = 0;
+  expect_result("signal", signal, 0);
+  expect_result("r", r, 0);
+  return r;
+}
+static int test_memwrite_unlink_pf0_0_1(void) {
+  int r = unlink("__f0");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_memwrite_unlink_pf0_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_memwrite_unlink_pf0_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+static void setup_memwrite_unlink_pf0_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_memwrite_unlink_pf0_0_final(void) {
+  unlink("__i0");
+}
+static void setup_memwrite_unlink_pf0_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pe_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 0);
+//   expect_result("r", r, 0);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pf0_0_0
+static int test_memwrite_unlink_pe_0_1(void) {
+  int r = unlink("__f0");
+  expect_result("r", r, -1);
+  expect_errno(2);
+  return xerrno(r);
+}
+static void setup_memwrite_unlink_pe_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_memwrite_unlink_pe_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc0
+// static void setup_memwrite_unlink_pe_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pe_0_final(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+// static void setup_memwrite_unlink_pe_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+static int test_memwrite_unlink_pd8_0_0(void) {
+  char* p = (char*) 0x12345600000UL;
+  int signal, r = 0;
+  pf_active = 1;
+  if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+    r = -1;
+  else
+    *p = 0;
+  pf_active = 0;
+  expect_result("signal", signal, 7);
+  expect_result("r", r, -1);
+  return r;
+}
+// static int test_memwrite_unlink_pd8_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+static void setup_memwrite_unlink_pd8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_memwrite_unlink_pd8_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x26000);
+}
+// static void setup_memwrite_unlink_pd8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+static void setup_memwrite_unlink_pd8_0_final(void) {
+  unlink("__i1");
+  unlink("__i0");
+}
+// static void setup_memwrite_unlink_pd8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pd8_1_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 7);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pd8_0_0
+// static int test_memwrite_unlink_pd8_1_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+// static void setup_memwrite_unlink_pd8_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_common
+static void setup_memwrite_unlink_pd8_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x26000);
+}
+// static void setup_memwrite_unlink_pd8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pd8_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_pd8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pd0_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 7);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pd8_0_0
+// static int test_memwrite_unlink_pd0_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pe_0_1
+static void setup_memwrite_unlink_pd0_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+// static void setup_memwrite_unlink_pd0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x26000);
+// }
+// ^ See setup_memwrite_unlink_pd8_1_proc0
+// static void setup_memwrite_unlink_pd0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pd0_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_pd0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pc8_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 0);
+//   expect_result("r", r, 0);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pf0_0_0
+// static int test_memwrite_unlink_pc8_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+static void setup_memwrite_unlink_pc8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_memwrite_unlink_pc8_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_memwrite_unlink_pc8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pc8_0_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pd8_0_final
+// static void setup_memwrite_unlink_pc8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pc8_1_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 0);
+//   expect_result("r", r, 0);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pf0_0_0
+// static int test_memwrite_unlink_pc8_1_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+static void setup_memwrite_unlink_pc8_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_memwrite_unlink_pc8_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_memwrite_unlink_pc8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pc8_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_pc8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pc0_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 0);
+//   expect_result("r", r, 0);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pf0_0_0
+// static int test_memwrite_unlink_pc0_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pe_0_1
+static void setup_memwrite_unlink_pc0_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+// static void setup_memwrite_unlink_pc0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_memwrite_unlink_pc8_1_proc0
+// static void setup_memwrite_unlink_pc0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pc0_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_pc0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+static int test_memwrite_unlink_pa_0_0(void) {
+  char* p = (char*) 0x12345600000UL;
+  int signal, r = 0;
+  pf_active = 1;
+  if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+    r = -1;
+  else
+    *p = 0;
+  pf_active = 0;
+  expect_result("signal", signal, 11);
+  expect_result("r", r, -1);
+  return r;
+}
+// static int test_memwrite_unlink_pa_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+// static void setup_memwrite_unlink_pa_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_common
+static void setup_memwrite_unlink_pa_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x2000);
+}
+// static void setup_memwrite_unlink_pa_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pa_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_pa_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pa_1_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 11);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pa_0_0
+// static int test_memwrite_unlink_pa_1_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+static void setup_memwrite_unlink_pa_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_memwrite_unlink_pa_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i1", 0x2000);
+}
+// static void setup_memwrite_unlink_pa_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+static void setup_memwrite_unlink_pa_1_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_memwrite_unlink_pa_1_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_pa_2_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 11);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pa_0_0
+// static int test_memwrite_unlink_pa_2_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+// static void setup_memwrite_unlink_pa_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_common
+static void setup_memwrite_unlink_pa_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_memwrite_unlink_pa_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_pa_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_pa_2_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_p8_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 11);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pa_0_0
+// static int test_memwrite_unlink_p8_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pe_0_1
+// static void setup_memwrite_unlink_p8_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_memwrite_unlink_pd0_0_common
+static void setup_memwrite_unlink_p8_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_memwrite_unlink_p8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_p8_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_p8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_p8_1_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 11);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pa_0_0
+// static int test_memwrite_unlink_p8_1_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pe_0_1
+// static void setup_memwrite_unlink_p8_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pe_0_common
+// static void setup_memwrite_unlink_p8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_memwrite_unlink_pa_2_proc0
+// static void setup_memwrite_unlink_p8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_p8_1_final(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+// static void setup_memwrite_unlink_p8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_p4_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 11);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pa_0_0
+// static int test_memwrite_unlink_p4_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pf0_0_1
+// static void setup_memwrite_unlink_p4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_common
+// static void setup_memwrite_unlink_p4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_p4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_p4_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_memwrite_unlink_pf0_0_final
+// static void setup_memwrite_unlink_p4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+/*
+ * calls: memwrite unlink
+ */
+// static int test_memwrite_unlink_p0_0_0(void) {
+//   char* p = (char*) 0x12345600000UL;
+//   int signal, r = 0;
+//   pf_active = 1;
+//   if ((signal = sigsetjmp(pf_jmpbuf, 1)))
+//     r = -1;
+//   else
+//     *p = 0;
+//   pf_active = 0;
+//   expect_result("signal", signal, 11);
+//   expect_result("r", r, -1);
+//   return r;
+// }
+// ^ See test_memwrite_unlink_pa_0_0
+// static int test_memwrite_unlink_p0_0_1(void) {
+//   int r = unlink("__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_memwrite_unlink_pe_0_1
+// static void setup_memwrite_unlink_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pe_0_common
+// static void setup_memwrite_unlink_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_memwrite_unlink_pf0_0_proc1
+// static void setup_memwrite_unlink_p0_0_final(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+// static void setup_memwrite_unlink_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_memwrite_unlink_pf0_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-memwrite_unlink_pf0_0",
+    &setup_memwrite_unlink_pf0_0_common,
+    { { &setup_memwrite_unlink_pf0_0_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pf0_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pe_0",
+    &setup_memwrite_unlink_pe_0_common,
+    { { &setup_memwrite_unlink_pf0_0_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    { { &test_memwrite_unlink_pf0_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pe_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pd8_0",
+    &setup_memwrite_unlink_pd8_0_common,
+    { { &setup_memwrite_unlink_pd8_0_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pd8_0_final,
+    { { &test_memwrite_unlink_pd8_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pd8_1",
+    &setup_memwrite_unlink_pf0_0_common,
+    { { &setup_memwrite_unlink_pd8_1_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pd8_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pd0_0",
+    &setup_memwrite_unlink_pd0_0_common,
+    { { &setup_memwrite_unlink_pd8_1_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pd8_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pe_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pc8_0",
+    &setup_memwrite_unlink_pc8_0_common,
+    { { &setup_memwrite_unlink_pc8_0_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pd8_0_final,
+    { { &test_memwrite_unlink_pf0_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pc8_1",
+    &setup_memwrite_unlink_pc8_1_common,
+    { { &setup_memwrite_unlink_pc8_1_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pf0_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pc0_0",
+    &setup_memwrite_unlink_pc0_0_common,
+    { { &setup_memwrite_unlink_pc8_1_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pf0_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pe_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pa_0",
+    &setup_memwrite_unlink_pf0_0_common,
+    { { &setup_memwrite_unlink_pa_0_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pa_1",
+    &setup_memwrite_unlink_pa_1_common,
+    { { &setup_memwrite_unlink_pa_1_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pa_1_final,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_pa_2",
+    &setup_memwrite_unlink_pf0_0_common,
+    { { &setup_memwrite_unlink_pa_2_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_p8_0",
+    &setup_memwrite_unlink_pd0_0_common,
+    { { &setup_memwrite_unlink_p8_0_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pe_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_p8_1",
+    &setup_memwrite_unlink_pe_0_common,
+    { { &setup_memwrite_unlink_pa_2_proc0 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pe_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_p4_0",
+    &setup_memwrite_unlink_pf0_0_common,
+    { { &setup_memwrite_unlink_pf0_0_proc1 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_final,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pf0_0_1, 0, "unlink" } },
+    &cleanup },
+  { "fs-memwrite_unlink_p0_0",
+    &setup_memwrite_unlink_pe_0_common,
+    { { &setup_memwrite_unlink_pf0_0_proc1 }, { &setup_memwrite_unlink_pf0_0_proc1 } },
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    &setup_memwrite_unlink_pf0_0_procfinal,
+    { { &test_memwrite_unlink_pa_0_0, 0, "memwrite" },
+      { &test_memwrite_unlink_pe_0_1, 0, "unlink" } },
+    &cleanup },
+//+++ common
+  {}
+};

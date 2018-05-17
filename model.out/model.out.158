@@ -1,0 +1,244 @@
+{
+  "tests": {
+    "munmap_read": {
+      "pf": {
+        "id": "munmap_read_pf", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_pf_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pec": {
+        "id": "munmap_read_pec", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_pec_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pe8": {
+        "id": "munmap_read_pe8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_pe8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pe0": {
+        "id": "munmap_read_pe0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_pe0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pd": {
+        "id": "munmap_read_pd", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_pd_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pc8": {
+        "id": "munmap_read_pc8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc0": {
+        "id": "munmap_read_pc0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_pc0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "munmap_read_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p7": {
+        "id": "munmap_read_p7", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p7_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p6c": {
+        "id": "munmap_read_p6c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p6c_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p68": {
+        "id": "munmap_read_p68", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p68_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p60": {
+        "id": "munmap_read_p60", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p60_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p5": {
+        "id": "munmap_read_p5", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p5_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p48": {
+        "id": "munmap_read_p48", 
+        "diverge": "ab/ba state"
+      }, 
+      "p40": {
+        "id": "munmap_read_p40", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p40_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "munmap_read_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_read_p0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

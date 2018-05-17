@@ -1,0 +1,80 @@
+{
+  "tests": {
+    "stat_unlink": {
+      "pf8": {
+        "id": "stat_unlink_pf8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf0": {
+        "id": "stat_unlink_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_unlink_pf0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "stat_unlink_pe", 
+        "diverge": "a/ba result"
+      }, 
+      "pc": {
+        "id": "stat_unlink_pc", 
+        "diverge": "a/ba result"
+      }, 
+      "p8": {
+        "id": "stat_unlink_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_unlink_p8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "stat_unlink_p6", 
+        "diverge": "ab/ba state"
+      }, 
+      "p4": {
+        "id": "stat_unlink_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_unlink_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.stat.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "stat_unlink_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_unlink_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "stat_unlink_p0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "tests": {
+    "link_sync": {
+      "pc": {
+        "id": "link_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_sync_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }, 
+          {
+            "id": "link_sync_pc_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }, 
+          {
+            "id": "link_sync_pc_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "link_sync_p8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p0": {
+        "id": "link_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_sync_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "tests": {
+    "rename_unlink": {
+      "pf8": {
+        "id": "rename_unlink_pf8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf0": {
+        "id": "rename_unlink_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_pf0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_pf0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "rename_unlink_pe", 
+        "diverge": "a/ba result"
+      }, 
+      "pc": {
+        "id": "rename_unlink_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "pbc": {
+        "id": "rename_unlink_pbc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "rename_unlink_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_pb8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_pb8_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_pb8_2", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_pb8_3", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_pb8_4", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "rename_unlink_pb0", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa8": {
+        "id": "rename_unlink_pa8", 
+        "diverge": "ab/b result"
+      }, 
+      "pa4": {
+        "id": "rename_unlink_pa4", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa0": {
+        "id": "rename_unlink_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_pa0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_pa0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.rename.dst]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "p9c": {
+        "id": "rename_unlink_p9c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p98": {
+        "id": "rename_unlink_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_p98_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "False", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "rename_unlink_p98_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.dst]": "False", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "rename_unlink_p90", 
+        "diverge": "ab/b result"
+      }, 
+      "p88": {
+        "id": "rename_unlink_p88", 
+        "diverge": "ab/b result"
+      }, 
+      "p80": {
+        "id": "rename_unlink_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_p80_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.rename.dst]": "False", 
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "rename_unlink_p6", 
+        "diverge": "ab/ba state"
+      }, 
+      "p4": {
+        "id": "rename_unlink_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.rename.src]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "rename_unlink_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_unlink_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.rename.src]": "False"
+            }
+          }, 
+          {
+            "id": "rename_unlink_p0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.rename.src]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

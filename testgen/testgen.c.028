@@ -1,0 +1,4275 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: fstat mprotect
+ */
+static int test_fstat_mprotect_pf_0_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, 0);
+  expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+static int test_fstat_mprotect_pf_0_1(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_fstat_mprotect_pf_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_fstat_mprotect_pf_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+static void setup_fstat_mprotect_pf_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_fstat_mprotect_pf_0_final(void) {
+  unlink("__i0");
+  close(20);
+  close(21);
+}
+static void setup_fstat_mprotect_pf_0_procfinal(void) {
+  close(20);
+  close(21);
+}
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+static void setup_fstat_mprotect_pf_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_fstat_mprotect_pf_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pf_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+static void setup_fstat_mprotect_pf_1_final(void) {
+  unlink("__i1");
+  unlink("__i0");
+  close(20);
+  close(21);
+}
+// static void setup_fstat_mprotect_pf_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+static void setup_fstat_mprotect_pf_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pf_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_2_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pf_2_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+static void setup_fstat_mprotect_pf_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pf_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pf_3_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_4_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+static void setup_fstat_mprotect_pf_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pf_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_4_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pf_4_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_5_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_fstat_mprotect_pf_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_5_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_5_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_6_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_6_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_6_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_fstat_mprotect_pf_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_6_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_6_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_7_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_7_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_fstat_mprotect_pf_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_7_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_7_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_8_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_8_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_8_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_fstat_mprotect_pf_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_8_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_8_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_9_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_9_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_9_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pf_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_9_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_9_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_10_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_10_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_10_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pf_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_10_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_10_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pf_11_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pf_11_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pf_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pf_11_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pf_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pf_11_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pf_11_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pe_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+static int test_fstat_mprotect_pe_0_1(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, -1);
+  expect_errno(12);
+  return xerrno(r);
+}
+// static void setup_fstat_mprotect_pe_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pe_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+// static void setup_fstat_mprotect_pe_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pe_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pe_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pe_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pe_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_pe_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+static void setup_fstat_mprotect_pe_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+// static void setup_fstat_mprotect_pe_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pe_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pe_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+static void setup_fstat_mprotect_pd_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pd_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+// static void setup_fstat_mprotect_pd_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+static void setup_fstat_mprotect_pd_1_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pd_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pd_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+static void setup_fstat_mprotect_pd_2_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_fstat_mprotect_pd_2_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_2_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+// static void setup_fstat_mprotect_pd_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pd_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_fstat_mprotect_pd_1_proc1
+// static void setup_fstat_mprotect_pd_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pd_3_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_4_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pd_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_fstat_mprotect_pd_2_proc1
+// static void setup_fstat_mprotect_pd_4_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_4_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_5_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+// static void setup_fstat_mprotect_pd_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+static void setup_fstat_mprotect_pd_5_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pd_5_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pd_5_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_6_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_6_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_1_common
+// static void setup_fstat_mprotect_pd_6_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pd_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_fstat_mprotect_pd_5_proc1
+// static void setup_fstat_mprotect_pd_6_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_1_final
+// static void setup_fstat_mprotect_pd_6_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_7_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_7_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_7_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+static void setup_fstat_mprotect_pd_7_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_fstat_mprotect_pd_7_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_7_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_8_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_8_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_8_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pd_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_fstat_mprotect_pd_7_proc1
+// static void setup_fstat_mprotect_pd_8_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_8_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_9_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_9_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_9_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+static void setup_fstat_mprotect_pd_9_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pd_9_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_9_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_10_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_10_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_10_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pd_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_pd_0_proc1
+// static void setup_fstat_mprotect_pd_10_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_10_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pd_11_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pd_11_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pd_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pd_11_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pd_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_pd_9_proc1
+// static void setup_fstat_mprotect_pd_11_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pd_11_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pc_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pc_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_pc_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pc_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_0_proc0
+// static void setup_fstat_mprotect_pc_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pc_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pc_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pc_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pf_0_0
+// static int test_fstat_mprotect_pc_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_pc_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_mprotect_pf_0_common
+// static void setup_fstat_mprotect_pc_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pe_1_proc0
+// static void setup_fstat_mprotect_pc_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_mprotect_pf_0_proc1
+// static void setup_fstat_mprotect_pc_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_final
+// static void setup_fstat_mprotect_pc_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_mprotect_pf_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+static int test_fstat_mprotect_pb_0_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, 0);
+  expect_result("st.st_size", st.st_size, 0);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+// static int test_fstat_mprotect_pb_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+static void setup_fstat_mprotect_pb_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_fstat_mprotect_pb_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+static void setup_fstat_mprotect_pb_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_fstat_mprotect_pb_0_final(void) {
+  unlink("__i0");
+}
+static void setup_fstat_mprotect_pb_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pb_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_pb_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+static void setup_fstat_mprotect_pb_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_fstat_mprotect_pb_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pb_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+static void setup_fstat_mprotect_pb_1_final(void) {
+  unlink("__i1");
+  unlink("__i0");
+}
+// static void setup_fstat_mprotect_pb_1_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pb_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_pb_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pb_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+static void setup_fstat_mprotect_pb_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_fstat_mprotect_pb_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pb_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_pb_2_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pb_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_pb_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pb_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_1_common
+static void setup_fstat_mprotect_pb_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_pb_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pb_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_1_final
+// static void setup_fstat_mprotect_pb_3_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pb_4_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_pb_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pb_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+static void setup_fstat_mprotect_pb_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_fstat_mprotect_pb_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pb_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_pb_4_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+static int test_fstat_mprotect_pb_5_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, 0);
+  expect_result("st.st_size", st.st_size, 8192);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+// static int test_fstat_mprotect_pb_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+static void setup_fstat_mprotect_pb_5_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_fstat_mprotect_pb_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 4096, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pb_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pb_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_pb_5_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pb_6_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_pb_6_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pb_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+static void setup_fstat_mprotect_pb_6_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pb_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pb_6_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_pb_6_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pb_7_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 8192);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_5_0
+// static int test_fstat_mprotect_pb_7_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_pb_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_5_common
+static void setup_fstat_mprotect_pb_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 4096, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_pb_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pb_7_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_pb_7_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_pa_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_pa_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_pa_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+static void setup_fstat_mprotect_pa_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_fstat_mprotect_pa_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_pa_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_pa_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p9_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p9_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+static void setup_fstat_mprotect_p9_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_p9_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p9_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p9_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_1_common
+// static void setup_fstat_mprotect_p9_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+static void setup_fstat_mprotect_p9_1_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_p9_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_1_final
+// static void setup_fstat_mprotect_p9_1_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p9_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p9_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+static void setup_fstat_mprotect_p9_2_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_fstat_mprotect_p9_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p9_2_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p9_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_1_common
+// static void setup_fstat_mprotect_p9_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+static void setup_fstat_mprotect_p9_3_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_fstat_mprotect_p9_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_1_final
+// static void setup_fstat_mprotect_p9_3_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_4_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p9_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p9_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+static void setup_fstat_mprotect_p9_4_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_fstat_mprotect_p9_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p9_4_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_5_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 8192);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_5_0
+// static int test_fstat_mprotect_p9_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_5_common
+static void setup_fstat_mprotect_p9_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 4096, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_fstat_mprotect_p9_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_p9_0_proc1
+// static void setup_fstat_mprotect_p9_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p9_5_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_6_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p9_6_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p9_6_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+static void setup_fstat_mprotect_p9_6_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_fstat_mprotect_p9_6_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p9_6_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p9_7_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 8192);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_5_0
+// static int test_fstat_mprotect_p9_7_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p9_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_5_common
+// static void setup_fstat_mprotect_p9_7_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 4096, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_p9_5_proc0
+// static void setup_fstat_mprotect_p9_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_p9_6_proc1
+// static void setup_fstat_mprotect_p9_7_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p9_7_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p8_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_pb_0_0
+// static int test_fstat_mprotect_p8_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_p8_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pa_0_proc0
+// static void setup_fstat_mprotect_p8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p8_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+static int test_fstat_mprotect_p6_0_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, -1);
+  expect_errno(9);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+// static int test_fstat_mprotect_p6_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p6_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p6_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_p9_0_proc1
+// static void setup_fstat_mprotect_p6_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p6_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p6_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p6_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p6_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+static void setup_fstat_mprotect_p6_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_fstat_mprotect_p6_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_fstat_mprotect_p9_2_proc1
+// static void setup_fstat_mprotect_p6_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p6_1_final(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+// static void setup_fstat_mprotect_p6_1_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p6_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p6_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p6_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p6_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_p9_6_proc1
+// static void setup_fstat_mprotect_p6_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p6_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p6_2_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p6_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p6_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p6_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_p6_1_common
+// static void setup_fstat_mprotect_p6_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_fstat_mprotect_p9_4_proc1
+// static void setup_fstat_mprotect_p6_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p6_3_final(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+// static void setup_fstat_mprotect_p6_3_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p4_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p4_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_p4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_p6_1_common
+// static void setup_fstat_mprotect_p4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p4_0_final(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+// static void setup_fstat_mprotect_p4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p2_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p2_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p2_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p2_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p2_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_p9_0_proc1
+// static void setup_fstat_mprotect_p2_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p2_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p2_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p2_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p2_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_p6_1_common
+// static void setup_fstat_mprotect_p2_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p2_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_fstat_mprotect_p9_2_proc1
+// static void setup_fstat_mprotect_p2_1_final(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+// static void setup_fstat_mprotect_p2_1_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p2_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p2_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p2_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_fstat_mprotect_pb_0_common
+// static void setup_fstat_mprotect_p2_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p2_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_fstat_mprotect_p9_6_proc1
+// static void setup_fstat_mprotect_p2_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_mprotect_pb_0_final
+// static void setup_fstat_mprotect_p2_2_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p2_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p2_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pf_0_1
+// static void setup_fstat_mprotect_p2_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_p6_1_common
+// static void setup_fstat_mprotect_p2_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p2_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_fstat_mprotect_p9_4_proc1
+// static void setup_fstat_mprotect_p2_3_final(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+// static void setup_fstat_mprotect_p2_3_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+/*
+ * calls: fstat mprotect
+ */
+// static int test_fstat_mprotect_p0_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_mprotect_p6_0_0
+// static int test_fstat_mprotect_p0_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_fstat_mprotect_pe_0_1
+// static void setup_fstat_mprotect_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_p6_1_common
+// static void setup_fstat_mprotect_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_mprotect_pb_0_proc1
+// static void setup_fstat_mprotect_p0_0_final(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+// static void setup_fstat_mprotect_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_mprotect_pb_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-fstat_mprotect_pf_0",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_0_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_1",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pf_1_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_2",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pf_2_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_3",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pf_3_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_4",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pf_4_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_5",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_5_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_6",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_6_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_7",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_7_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_8",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_8_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_9",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_9_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_10",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_10_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pf_11",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pf_11_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pe_0",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pe_1",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_0",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pd_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_1",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pd_1_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_2",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pd_2_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_3",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pd_1_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_4",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pd_2_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_5",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pd_5_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_6",
+    &setup_fstat_mprotect_pf_1_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pd_5_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_1_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_7",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pd_7_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_8",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pd_7_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_9",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pd_9_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_10",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pd_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pd_11",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pd_9_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pc_0",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_0_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pc_1",
+    &setup_fstat_mprotect_pf_0_common,
+    { { &setup_fstat_mprotect_pe_1_proc0 }, { &setup_fstat_mprotect_pf_0_proc1 } },
+    &setup_fstat_mprotect_pf_0_procfinal,
+    &setup_fstat_mprotect_pf_0_final,
+    { { &test_fstat_mprotect_pf_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_0",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pb_0_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_1",
+    &setup_fstat_mprotect_pb_1_common,
+    { { &setup_fstat_mprotect_pb_1_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_1_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_2",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pb_2_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_3",
+    &setup_fstat_mprotect_pb_1_common,
+    { { &setup_fstat_mprotect_pb_3_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_1_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_4",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pb_4_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_5",
+    &setup_fstat_mprotect_pb_5_common,
+    { { &setup_fstat_mprotect_pb_5_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_5_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_6",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pb_6_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pb_7",
+    &setup_fstat_mprotect_pb_5_common,
+    { { &setup_fstat_mprotect_pb_7_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_5_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_pa_0",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_0",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_p9_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_1",
+    &setup_fstat_mprotect_pb_1_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_p9_1_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_1_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_2",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_p9_2_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_3",
+    &setup_fstat_mprotect_pb_1_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_p9_3_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_1_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_4",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_p9_4_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_5",
+    &setup_fstat_mprotect_pb_5_common,
+    { { &setup_fstat_mprotect_p9_5_proc0 }, { &setup_fstat_mprotect_p9_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_5_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_6",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_p9_6_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p9_7",
+    &setup_fstat_mprotect_pb_5_common,
+    { { &setup_fstat_mprotect_p9_5_proc0 }, { &setup_fstat_mprotect_p9_6_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_5_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p8_0",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pa_0_proc0 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_pb_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p6_0",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_p9_0_proc1 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p6_1",
+    &setup_fstat_mprotect_p6_1_common,
+    { { &setup_fstat_mprotect_p9_2_proc1 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_procfinal,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p6_2",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_p9_6_proc1 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p6_3",
+    &setup_fstat_mprotect_p6_1_common,
+    { { &setup_fstat_mprotect_p9_4_proc1 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_procfinal,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p4_0",
+    &setup_fstat_mprotect_p6_1_common,
+    { { &setup_fstat_mprotect_pb_0_proc1 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_procfinal,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p2_0",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pb_0_proc1 }, { &setup_fstat_mprotect_p9_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p2_1",
+    &setup_fstat_mprotect_p6_1_common,
+    { { &setup_fstat_mprotect_pb_0_proc1 }, { &setup_fstat_mprotect_p9_2_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_procfinal,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p2_2",
+    &setup_fstat_mprotect_pb_0_common,
+    { { &setup_fstat_mprotect_pb_0_proc1 }, { &setup_fstat_mprotect_p9_6_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_final,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p2_3",
+    &setup_fstat_mprotect_p6_1_common,
+    { { &setup_fstat_mprotect_pb_0_proc1 }, { &setup_fstat_mprotect_p9_4_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_procfinal,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-fstat_mprotect_p0_0",
+    &setup_fstat_mprotect_p6_1_common,
+    { { &setup_fstat_mprotect_pb_0_proc1 }, { &setup_fstat_mprotect_pb_0_proc1 } },
+    &setup_fstat_mprotect_pb_0_procfinal,
+    &setup_fstat_mprotect_pb_0_procfinal,
+    { { &test_fstat_mprotect_p6_0_0, 0, "fstat" },
+      { &test_fstat_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+//+++ common
+  {}
+};

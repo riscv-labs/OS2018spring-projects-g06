@@ -1,0 +1,30 @@
+{
+  "tests": {
+    "pipe_sync": {
+      "pe": {
+        "id": "pipe_sync_pe", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc": {
+        "id": "pipe_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_sync_pc_0", 
+            "assignments": {
+              "a.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "pipe_sync_p8", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "pipe_sync_p0", 
+        "diverge": "a/ba result"
+      }
+    }
+  }
+}

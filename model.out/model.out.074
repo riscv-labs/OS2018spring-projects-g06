@@ -1,0 +1,205 @@
+{
+  "tests": {
+    "link_stat": {
+      "pe": {
+        "id": "link_stat_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_stat_pe_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_3", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_4", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_5", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_6", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_7", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_8", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_9", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_10", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }, 
+          {
+            "id": "link_stat_pe_11", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "link_stat_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_stat_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "link_stat_pc_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "link_stat_pc_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "pbc": {
+        "id": "link_stat_pbc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "link_stat_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_stat_pb8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "link_stat_pb0", 
+        "diverge": "ab/b result"
+      }, 
+      "pa": {
+        "id": "link_stat_pa", 
+        "diverge": "ab/b result"
+      }, 
+      "p9": {
+        "id": "link_stat_p9", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "link_stat_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_stat_p8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "link_stat_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_stat_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "link_stat_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_stat_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "link_stat_p0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.link.oldpn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "tests": {
+    "pwrite_reboot": {
+      "pc": {
+        "id": "pwrite_reboot_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pwrite_reboot_pc_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.pwrite.fd]": "True", 
+              "a.pwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "pwrite_reboot_pb", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa8": {
+        "id": "pwrite_reboot_pa8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa0": {
+        "id": "pwrite_reboot_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pwrite_reboot_pa0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.pwrite.fd]": "True", 
+              "a.pwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9": {
+        "id": "pwrite_reboot_p9", 
+        "diverge": "ab/ba state"
+      }, 
+      "p88": {
+        "id": "pwrite_reboot_p88", 
+        "diverge": "ab/ba state"
+      }, 
+      "p80": {
+        "id": "pwrite_reboot_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pwrite_reboot_p80_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.pwrite.fd]": "True", 
+              "a.pwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "pwrite_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pwrite_reboot_p0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.pwrite.fd]": "False", 
+              "a.pwrite.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

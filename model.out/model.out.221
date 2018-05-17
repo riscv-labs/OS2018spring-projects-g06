@@ -1,0 +1,77 @@
+{
+  "tests": {
+    "stat_stat": {
+      "pc": {
+        "id": "stat_stat_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_stat_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "stat_stat_pc_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "stat_stat_pc_2", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "stat_stat_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_stat_p8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "stat_stat_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_stat_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "stat_stat_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "stat_stat_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "stat_stat_p0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.stat.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

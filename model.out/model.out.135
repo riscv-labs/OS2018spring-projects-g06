@@ -1,0 +1,2239 @@
+{
+  "tests": {
+    "mmap_rename": {
+      "pf8": {
+        "id": "mmap_rename_pf8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf0": {
+        "id": "mmap_rename_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pf0_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pf0_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pf0_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pf0_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pf0_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pf0_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pf0_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "pec": {
+        "id": "mmap_rename_pec", 
+        "diverge": "ab/ba state"
+      }, 
+      "pe8": {
+        "id": "mmap_rename_pe8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pe8_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_7", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_8", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_9", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_10", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_11", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_12", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_13", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_14", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe8_15", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe4": {
+        "id": "mmap_rename_pe4", 
+        "diverge": "ab/ba state"
+      }, 
+      "pe0": {
+        "id": "mmap_rename_pe0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pe0_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe0_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe0_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe0_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe0_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe0_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pe0_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd": {
+        "id": "mmap_rename_pd", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc": {
+        "id": "mmap_rename_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pc_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pc_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pc_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pc_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pc_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mmap.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "Fs.proc0.va_map._map.anon[a.mmap.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "pbc": {
+        "id": "mmap_rename_pbc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pbc_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pbc_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pbc_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pbc_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pbb": {
+        "id": "mmap_rename_pbb", 
+        "diverge": "ab/ba state"
+      }, 
+      "pba": {
+        "id": "mmap_rename_pba", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pba_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_7", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_8", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pba_9", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb8": {
+        "id": "mmap_rename_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pb8_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pb8_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pb8_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pb8_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "mmap_rename_pb0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pb0_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pb0_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pac": {
+        "id": "mmap_rename_pac", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pac_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pac_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "pab": {
+        "id": "mmap_rename_pab", 
+        "diverge": "ab/ba state"
+      }, 
+      "paa": {
+        "id": "mmap_rename_paa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_paa_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_paa_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_paa_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_paa_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_paa_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa8": {
+        "id": "mmap_rename_pa8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pa8_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_pa8_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "pa0": {
+        "id": "mmap_rename_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_pa0_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "p98": {
+        "id": "mmap_rename_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p98_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "p96": {
+        "id": "mmap_rename_p96", 
+        "diverge": "ab/ba state"
+      }, 
+      "p94": {
+        "id": "mmap_rename_p94", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p94_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p94_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "mmap_rename_p90", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p90_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "mmap_rename_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p8_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mmap.va]": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "p7c": {
+        "id": "mmap_rename_p7c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p78": {
+        "id": "mmap_rename_p78", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p78_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p78_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True"
+            }
+          }
+        ]
+      }, 
+      "p70": {
+        "id": "mmap_rename_p70", 
+        "diverge": "a/ba result"
+      }, 
+      "p6e": {
+        "id": "mmap_rename_p6e", 
+        "diverge": "ab/ba state"
+      }, 
+      "p6c": {
+        "id": "mmap_rename_p6c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p6c_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p6c_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p6c_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p6c_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p68": {
+        "id": "mmap_rename_p68", 
+        "diverge": "a/ba result"
+      }, 
+      "p66": {
+        "id": "mmap_rename_p66", 
+        "diverge": "ab/ba state"
+      }, 
+      "p64": {
+        "id": "mmap_rename_p64", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p64_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p64_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p60": {
+        "id": "mmap_rename_p60", 
+        "diverge": "a/ba result"
+      }, 
+      "p58": {
+        "id": "mmap_rename_p58", 
+        "diverge": "ab/ba state"
+      }, 
+      "p50": {
+        "id": "mmap_rename_p50", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p50_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p50_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "mmap_rename_p4", 
+        "diverge": "a/ba result"
+      }, 
+      "p3c": {
+        "id": "mmap_rename_p3c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p3c_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3c_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3c_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3c_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p3b": {
+        "id": "mmap_rename_p3b", 
+        "diverge": "ab/ba state"
+      }, 
+      "p3a": {
+        "id": "mmap_rename_p3a", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p3a_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_7", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_8", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p3a_9", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p38": {
+        "id": "mmap_rename_p38", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p38_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p38_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p38_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p38_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p30": {
+        "id": "mmap_rename_p30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p30_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p30_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "True", 
+              "a.mmap.anon": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.mmap.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p2e": {
+        "id": "mmap_rename_p2e", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p2e_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2e_7", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "p2c": {
+        "id": "mmap_rename_p2c", 
+        "diverge": "a/ba result"
+      }, 
+      "p2b8": {
+        "id": "mmap_rename_p2b8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p2b0": {
+        "id": "mmap_rename_p2b0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p2b0_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_7", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_8", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_9", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_10", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_11", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_12", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_13", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_14", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_15", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_16", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_17", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_18", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p2b0_19", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p2a": {
+        "id": "mmap_rename_p2a", 
+        "diverge": "a/ba result"
+      }, 
+      "p29": {
+        "id": "mmap_rename_p29", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p29_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_4", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_5", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_6", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p29_7", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p28": {
+        "id": "mmap_rename_p28", 
+        "diverge": "a/ba result"
+      }, 
+      "p24": {
+        "id": "mmap_rename_p24", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p24_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p24_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p24_2", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p24_3", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.fixed": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.mmap.fd]": "False", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "p20": {
+        "id": "mmap_rename_p20", 
+        "diverge": "a/ba result"
+      }, 
+      "p18": {
+        "id": "mmap_rename_p18", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p18_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }, 
+      "p16": {
+        "id": "mmap_rename_p16", 
+        "diverge": "ab/ba state"
+      }, 
+      "p14": {
+        "id": "mmap_rename_p14", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p14_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "mmap_rename_p14_1", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p10": {
+        "id": "mmap_rename_p10", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p10_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "mmap_rename_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_rename_p0_0", 
+            "assignments": {
+              "a.mmap.pid": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

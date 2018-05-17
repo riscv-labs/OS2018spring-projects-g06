@@ -1,0 +1,2287 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: mprotect rename
+ */
+static int test_mprotect_rename_pe_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static int test_mprotect_rename_pe_0_1(void) {
+  int r = rename("__f0", "__f0");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_mprotect_rename_pe_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_mprotect_rename_pe_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+static void setup_mprotect_rename_pe_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_mprotect_rename_pe_0_final(void) {
+  unlink("__i0");
+}
+static void setup_mprotect_rename_pe_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pe_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pe_1_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_1
+static void setup_mprotect_rename_pe_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_mprotect_rename_pe_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_mprotect_rename_pe_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+static void setup_mprotect_rename_pe_1_final(void) {
+  unlink("__i1");
+  unlink("__i0");
+}
+// static void setup_mprotect_rename_pe_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pe_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pe_2_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_1
+// static void setup_mprotect_rename_pe_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_1_common
+static void setup_mprotect_rename_pe_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_mprotect_rename_pe_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pe_2_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pe_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pe_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pe_3_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_1
+// static void setup_mprotect_rename_pe_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+static void setup_mprotect_rename_pe_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_mprotect_rename_pe_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pe_3_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pe_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pe_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pe_4_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_1
+// static void setup_mprotect_rename_pe_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+static void setup_mprotect_rename_pe_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_mprotect_rename_pe_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pe_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pe_4_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pe_5_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pe_5_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_1
+// static void setup_mprotect_rename_pe_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+static void setup_mprotect_rename_pe_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_mprotect_rename_pe_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pe_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pe_5_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+static int test_mprotect_rename_pd0_0_1(void) {
+  int r = rename("__f0", "__f1");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_mprotect_rename_pd0_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+static void setup_mprotect_rename_pd0_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x2000);
+}
+// static void setup_mprotect_rename_pd0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pd0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_1_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+static void setup_mprotect_rename_pd0_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+static void setup_mprotect_rename_pd0_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i1", 0x2000);
+}
+// static void setup_mprotect_rename_pd0_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_2_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+static void setup_mprotect_rename_pd0_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+static void setup_mprotect_rename_pd0_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i2", 0x2000);
+}
+// static void setup_mprotect_rename_pd0_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+static void setup_mprotect_rename_pd0_2_final(void) {
+  unlink("__i1");
+  unlink("__i2");
+  unlink("__i0");
+}
+// static void setup_mprotect_rename_pd0_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_3_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_1_common
+// static void setup_mprotect_rename_pd0_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x2000);
+// }
+// ^ See setup_mprotect_rename_pd0_0_proc0
+// static void setup_mprotect_rename_pd0_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_4_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_1_common
+// static void setup_mprotect_rename_pd0_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_mprotect_rename_pe_3_proc0
+// static void setup_mprotect_rename_pd0_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_4_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_4_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_5_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_5_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_1_common
+static void setup_mprotect_rename_pd0_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x2000);
+}
+// static void setup_mprotect_rename_pd0_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_5_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_5_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_6_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_6_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_1_common
+// static void setup_mprotect_rename_pd0_6_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_mprotect_rename_pe_4_proc0
+// static void setup_mprotect_rename_pd0_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_6_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_6_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_7_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_7_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_1_common
+static void setup_mprotect_rename_pd0_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x2000);
+}
+// static void setup_mprotect_rename_pd0_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_7_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_7_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_8_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_8_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+static void setup_mprotect_rename_pd0_8_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_mprotect_rename_pd0_8_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x2000);
+// }
+// ^ See setup_mprotect_rename_pd0_1_proc0
+// static void setup_mprotect_rename_pd0_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_8_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_8_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_9_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_9_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_8_common
+// static void setup_mprotect_rename_pd0_9_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x2000);
+// }
+// ^ See setup_mprotect_rename_pd0_7_proc0
+// static void setup_mprotect_rename_pd0_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_9_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pd0_9_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_10_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_10_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_0_common
+// static void setup_mprotect_rename_pd0_10_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_mprotect_rename_pe_3_proc0
+// static void setup_mprotect_rename_pd0_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_10_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pd0_10_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_11_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_11_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_0_common
+// static void setup_mprotect_rename_pd0_11_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_mprotect_rename_pe_4_proc0
+// static void setup_mprotect_rename_pd0_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_11_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pd0_11_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_12_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_12_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_12_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_0_common
+// static void setup_mprotect_rename_pd0_12_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x2000);
+// }
+// ^ See setup_mprotect_rename_pd0_5_proc0
+// static void setup_mprotect_rename_pd0_12_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_12_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pd0_12_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pd0_13_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pd0_13_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pd0_13_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i2", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_2_common
+static void setup_mprotect_rename_pd0_13_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i2", 0x2000);
+}
+// static void setup_mprotect_rename_pd0_13_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pd0_13_final(void) {
+//   unlink("__i1");
+//   unlink("__i2");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pd0_2_final
+// static void setup_mprotect_rename_pd0_13_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pc_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pc_0_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pc_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+// static void setup_mprotect_rename_pc_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_mprotect_rename_pe_0_proc0
+// static void setup_mprotect_rename_pc_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pc_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pc_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pc_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pc_1_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pc_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_1_common
+// static void setup_mprotect_rename_pc_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_mprotect_rename_pe_1_proc0
+// static void setup_mprotect_rename_pc_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pc_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pc_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pc_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pc_2_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pc_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+// static void setup_mprotect_rename_pc_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_mprotect_rename_pe_3_proc0
+// static void setup_mprotect_rename_pc_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pc_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pc_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pc_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pc_3_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pc_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_1_common
+// static void setup_mprotect_rename_pc_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_mprotect_rename_pe_2_proc0
+// static void setup_mprotect_rename_pc_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pc_3_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_pc_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pc_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pc_4_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pc_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+// static void setup_mprotect_rename_pc_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_mprotect_rename_pe_4_proc0
+// static void setup_mprotect_rename_pc_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pc_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pc_4_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_pc_5_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_pc_5_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_pc_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+// static void setup_mprotect_rename_pc_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_mprotect_rename_pe_5_proc0
+// static void setup_mprotect_rename_pc_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_pc_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_pc_5_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p8_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+static int test_mprotect_rename_p8_0_1(void) {
+  int r = rename("__f0", "__f0");
+  expect_result("r", r, -1);
+  expect_errno(2);
+  return xerrno(r);
+}
+static void setup_mprotect_rename_p8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+// static void setup_mprotect_rename_p8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_mprotect_rename_pe_0_proc0
+// static void setup_mprotect_rename_p8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p8_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_p8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p8_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_p8_1_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p8_0_1
+static void setup_mprotect_rename_p8_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_mprotect_rename_p8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_mprotect_rename_pe_3_proc0
+// static void setup_mprotect_rename_p8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p8_1_final(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+// static void setup_mprotect_rename_p8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p8_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_p8_2_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p8_0_1
+// static void setup_mprotect_rename_p8_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_rename_p8_0_common
+// static void setup_mprotect_rename_p8_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_mprotect_rename_pe_5_proc0
+// static void setup_mprotect_rename_p8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p8_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_p8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p8_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_0
+// static int test_mprotect_rename_p8_3_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p8_0_1
+// static void setup_mprotect_rename_p8_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_p8_1_common
+// static void setup_mprotect_rename_p8_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_mprotect_rename_pe_4_proc0
+// static void setup_mprotect_rename_p8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p8_3_final(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+// static void setup_mprotect_rename_p8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+static int test_mprotect_rename_p6_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, -1);
+  expect_errno(12);
+  return xerrno(r);
+}
+// static int test_mprotect_rename_p6_0_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pe_0_1
+// static void setup_mprotect_rename_p6_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+// static void setup_mprotect_rename_p6_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p6_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p6_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_p6_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p50_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p6_0_0
+// static int test_mprotect_rename_p50_0_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_p50_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_0_common
+// static void setup_mprotect_rename_p50_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p50_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p50_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_p50_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p50_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p6_0_0
+// static int test_mprotect_rename_p50_1_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_p50_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pd0_1_common
+// static void setup_mprotect_rename_p50_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p50_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p50_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_1_final
+// static void setup_mprotect_rename_p50_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p4_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p6_0_0
+// static int test_mprotect_rename_p4_0_1(void) {
+//   int r = rename("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_pd0_0_1
+// static void setup_mprotect_rename_p4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_mprotect_rename_pe_0_common
+// static void setup_mprotect_rename_p4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p4_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_rename_pe_0_final
+// static void setup_mprotect_rename_p4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+/*
+ * calls: mprotect rename
+ */
+// static int test_mprotect_rename_p0_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p6_0_0
+// static int test_mprotect_rename_p0_0_1(void) {
+//   int r = rename("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_rename_p8_0_1
+// static void setup_mprotect_rename_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_p8_1_common
+// static void setup_mprotect_rename_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_rename_pe_0_proc1
+// static void setup_mprotect_rename_p0_0_final(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+// static void setup_mprotect_rename_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_rename_pe_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-mprotect_rename_pe_0",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_0_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pe_1",
+    &setup_mprotect_rename_pe_1_common,
+    { { &setup_mprotect_rename_pe_1_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pe_2",
+    &setup_mprotect_rename_pe_1_common,
+    { { &setup_mprotect_rename_pe_2_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pe_3",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_3_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pe_4",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_4_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pe_5",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_5_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_0",
+    &setup_mprotect_rename_pd0_0_common,
+    { { &setup_mprotect_rename_pd0_0_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_1",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pd0_1_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_2",
+    &setup_mprotect_rename_pd0_2_common,
+    { { &setup_mprotect_rename_pd0_2_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pd0_2_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_3",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pd0_0_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_4",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pe_3_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_5",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pd0_5_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_6",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pe_4_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_7",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pd0_7_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_8",
+    &setup_mprotect_rename_pd0_8_common,
+    { { &setup_mprotect_rename_pd0_1_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_9",
+    &setup_mprotect_rename_pd0_8_common,
+    { { &setup_mprotect_rename_pd0_7_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_10",
+    &setup_mprotect_rename_pd0_0_common,
+    { { &setup_mprotect_rename_pe_3_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_11",
+    &setup_mprotect_rename_pd0_0_common,
+    { { &setup_mprotect_rename_pe_4_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_12",
+    &setup_mprotect_rename_pd0_0_common,
+    { { &setup_mprotect_rename_pd0_5_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pd0_13",
+    &setup_mprotect_rename_pd0_2_common,
+    { { &setup_mprotect_rename_pd0_13_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pd0_2_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pc_0",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_0_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pc_1",
+    &setup_mprotect_rename_pe_1_common,
+    { { &setup_mprotect_rename_pe_1_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pc_2",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_3_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pc_3",
+    &setup_mprotect_rename_pe_1_common,
+    { { &setup_mprotect_rename_pe_2_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pc_4",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_4_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_pc_5",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_5_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p8_0",
+    &setup_mprotect_rename_p8_0_common,
+    { { &setup_mprotect_rename_pe_0_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_p8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p8_1",
+    &setup_mprotect_rename_p8_1_common,
+    { { &setup_mprotect_rename_pe_3_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_procfinal,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_p8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p8_2",
+    &setup_mprotect_rename_p8_0_common,
+    { { &setup_mprotect_rename_pe_5_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_p8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p8_3",
+    &setup_mprotect_rename_p8_1_common,
+    { { &setup_mprotect_rename_pe_4_proc0 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_procfinal,
+    { { &test_mprotect_rename_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_p8_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p6_0",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_0_proc1 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_p6_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pe_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p50_0",
+    &setup_mprotect_rename_pd0_0_common,
+    { { &setup_mprotect_rename_pe_0_proc1 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_p6_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p50_1",
+    &setup_mprotect_rename_pd0_1_common,
+    { { &setup_mprotect_rename_pe_0_proc1 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_1_final,
+    { { &test_mprotect_rename_p6_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p4_0",
+    &setup_mprotect_rename_pe_0_common,
+    { { &setup_mprotect_rename_pe_0_proc1 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_final,
+    { { &test_mprotect_rename_p6_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_pd0_0_1, 0, "rename" } },
+    &cleanup },
+  { "fs-mprotect_rename_p0_0",
+    &setup_mprotect_rename_p8_1_common,
+    { { &setup_mprotect_rename_pe_0_proc1 }, { &setup_mprotect_rename_pe_0_proc1 } },
+    &setup_mprotect_rename_pe_0_procfinal,
+    &setup_mprotect_rename_pe_0_procfinal,
+    { { &test_mprotect_rename_p6_0_0, 0, "mprotect" },
+      { &test_mprotect_rename_p8_0_1, 0, "rename" } },
+    &cleanup },
+//+++ common
+  {}
+};

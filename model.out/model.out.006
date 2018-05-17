@@ -1,0 +1,998 @@
+{
+  "tests": {
+    "close_memwrite": {
+      "pf8": {
+        "id": "close_memwrite_pf8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pf8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf4": {
+        "id": "close_memwrite_pf4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pf4_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf4_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf4_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf4_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf4_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf4_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf4_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf0": {
+        "id": "close_memwrite_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pf0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf0_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf0_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pf0_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "close_memwrite_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pe_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pe_9", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "close_memwrite_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pc_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pc_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pc_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb8": {
+        "id": "close_memwrite_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pb8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb4": {
+        "id": "close_memwrite_pb4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pb4_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb4_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb4_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb4_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb4_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb4_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb4_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "close_memwrite_pb0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pb0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb0_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb0_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pb0_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "close_memwrite_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_pa_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_pa_9", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "close_memwrite_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_p8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_p8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p78": {
+        "id": "close_memwrite_p78", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p78_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p74": {
+        "id": "close_memwrite_p74", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p74_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p70": {
+        "id": "close_memwrite_p70", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p70_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "True", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "close_memwrite_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p6_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False"
+            }
+          }, 
+          {
+            "id": "close_memwrite_p6_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "True", 
+              "Fs.proc0.va_map._map.writable[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False", 
+              "Fs.proc0.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "close_memwrite_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p4_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc0.va_map._valid[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p38": {
+        "id": "close_memwrite_p38", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p38_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "p34": {
+        "id": "close_memwrite_p34", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p34_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "p30": {
+        "id": "close_memwrite_p30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p30_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "True", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "p2": {
+        "id": "close_memwrite_p2", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p2_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "False", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True"
+            }
+          }, 
+          {
+            "id": "close_memwrite_p2_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "b.memwrite.pid": "True", 
+              "Fs.proc1.va_map._map.anon[b.memwrite.va]": "True", 
+              "a.close.pid": "False", 
+              "Fs.proc1.va_map._map.writable[b.memwrite.va]": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "close_memwrite_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_memwrite_p0_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.proc1.va_map._valid[b.memwrite.va]": "False", 
+              "b.memwrite.pid": "True"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,2078 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: mprotect munmap
+ */
+static int test_mprotect_munmap_pe_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static int test_mprotect_munmap_pe_0_1(void) {
+  int* va = (int*) 0x12345601000UL;
+  int r = munmap(va, 4096);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_mprotect_munmap_pe_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_mprotect_munmap_pe_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+static void setup_mprotect_munmap_pe_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_mprotect_munmap_pe_0_final(void) {
+  unlink("__i0");
+}
+static void setup_mprotect_munmap_pe_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_1_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+static void setup_mprotect_munmap_pe_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_mprotect_munmap_pe_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i1", 0x0);
+}
+// static void setup_mprotect_munmap_pe_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+static void setup_mprotect_munmap_pe_1_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_mprotect_munmap_pe_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_2_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_3_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+static void setup_mprotect_munmap_pe_3_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+static void setup_mprotect_munmap_pe_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_mprotect_munmap_pe_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_3_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_pe_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_4_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_4_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_5_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_5_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+static void setup_mprotect_munmap_pe_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_mprotect_munmap_pe_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_5_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_pe_5_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_6_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_6_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+static void setup_mprotect_munmap_pe_6_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mprotect_munmap_pe_6_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x1000);
+}
+// static void setup_mprotect_munmap_pe_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_6_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_6_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_7_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_7_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+static void setup_mprotect_munmap_pe_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_mprotect_munmap_pe_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_7_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_pe_7_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_8_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_8_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_8_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_mprotect_munmap_pe_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_8_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_8_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_9_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_9_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_9_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_9_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_9_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_10_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_10_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_10_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_10_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_10_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_11_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_11_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_6_common
+static void setup_mprotect_munmap_pe_11_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x1000);
+}
+// static void setup_mprotect_munmap_pe_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_11_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_11_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_12_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_12_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+static void setup_mprotect_munmap_pe_12_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_mprotect_munmap_pe_12_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i1", 0x1000);
+}
+// static void setup_mprotect_munmap_pe_12_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_12_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_mprotect_munmap_pe_1_final
+// static void setup_mprotect_munmap_pe_12_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_13_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_13_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_13_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_6_common
+static void setup_mprotect_munmap_pe_13_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_mprotect_munmap_pe_13_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_13_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_13_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_14_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_14_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_14_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_6_common
+static void setup_mprotect_munmap_pe_14_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x1000);
+}
+// static void setup_mprotect_munmap_pe_14_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_14_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_14_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_15_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_15_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_15_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_12_common
+static void setup_mprotect_munmap_pe_15_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i1", 0x1000);
+}
+// static void setup_mprotect_munmap_pe_15_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_15_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_mprotect_munmap_pe_1_final
+// static void setup_mprotect_munmap_pe_15_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_16_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_16_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_16_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_12_common
+static void setup_mprotect_munmap_pe_16_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i1", 0x1000);
+}
+// static void setup_mprotect_munmap_pe_16_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_16_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_mprotect_munmap_pe_1_final
+// static void setup_mprotect_munmap_pe_16_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_17_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_17_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_17_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_6_common
+static void setup_mprotect_munmap_pe_17_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_mprotect_munmap_pe_17_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_17_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_17_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_18_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_18_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_18_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_6_common
+static void setup_mprotect_munmap_pe_18_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_mprotect_munmap_pe_18_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_18_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_18_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_19_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_19_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_19_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_19_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_19_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_19_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_19_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_20_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_20_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_20_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_6_common
+static void setup_mprotect_munmap_pe_20_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x1000);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_20_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_20_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_20_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_21_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_21_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_21_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_21_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_21_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_21_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_21_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_22_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_22_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_22_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+static void setup_mprotect_munmap_pe_22_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_mprotect_munmap_pe_22_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_22_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_pe_22_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_23_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_23_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_23_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+static void setup_mprotect_munmap_pe_23_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_mprotect_munmap_pe_23_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_23_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_pe_23_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_24_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_24_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_24_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_24_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_24_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_24_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_24_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_25_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_25_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_25_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_25_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_25_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_25_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_25_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_26_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_26_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_26_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+static void setup_mprotect_munmap_pe_26_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_mprotect_munmap_pe_26_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_26_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_pe_26_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_pe_27_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_pe_27_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_1
+// static void setup_mprotect_munmap_pe_27_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+static void setup_mprotect_munmap_pe_27_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_mprotect_munmap_pe_27_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_pe_27_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_pe_27_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_p8_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+static int test_mprotect_munmap_p8_0_1(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = munmap(va, 4096);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static void setup_mprotect_munmap_p8_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+// static void setup_mprotect_munmap_p8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_mprotect_munmap_pe_2_proc0
+// static void setup_mprotect_munmap_p8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p8_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_p8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_p8_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_p8_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_p8_0_1
+// static void setup_mprotect_munmap_p8_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+// static void setup_mprotect_munmap_p8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_mprotect_munmap_pe_3_proc0
+// static void setup_mprotect_munmap_p8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p8_1_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_p8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_p8_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_p8_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_p8_0_1
+// static void setup_mprotect_munmap_p8_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_mprotect_munmap_pe_0_common
+// static void setup_mprotect_munmap_p8_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_mprotect_munmap_pe_4_proc0
+// static void setup_mprotect_munmap_p8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p8_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_mprotect_munmap_pe_0_final
+// static void setup_mprotect_munmap_p8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_p8_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_pe_0_0
+// static int test_mprotect_munmap_p8_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_p8_0_1
+// static void setup_mprotect_munmap_p8_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+// static void setup_mprotect_munmap_p8_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_mprotect_munmap_pe_5_proc0
+// static void setup_mprotect_munmap_p8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p8_3_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_p8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+static int test_mprotect_munmap_p4_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, -1);
+  expect_errno(12);
+  return xerrno(r);
+}
+// static int test_mprotect_munmap_p4_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_p8_0_1
+// static void setup_mprotect_munmap_p4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+// static void setup_mprotect_munmap_p4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p4_0_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_p4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+/*
+ * calls: mprotect munmap
+ */
+// static int test_mprotect_munmap_p0_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_p4_0_0
+// static int test_mprotect_munmap_p0_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_mprotect_munmap_p8_0_1
+// static void setup_mprotect_munmap_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_3_common
+// static void setup_mprotect_munmap_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_mprotect_munmap_pe_0_proc1
+// static void setup_mprotect_munmap_p0_0_final(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+// static void setup_mprotect_munmap_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_mprotect_munmap_pe_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-mprotect_munmap_pe_0",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_0_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_1",
+    &setup_mprotect_munmap_pe_1_common,
+    { { &setup_mprotect_munmap_pe_1_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_1_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_2",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_2_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_3",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_3_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_4",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_4_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_5",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_5_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_6",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_6_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_7",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_7_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_8",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_8_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_9",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_9_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_10",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_10_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_11",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_11_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_12",
+    &setup_mprotect_munmap_pe_12_common,
+    { { &setup_mprotect_munmap_pe_12_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_1_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_13",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_13_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_14",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_14_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_15",
+    &setup_mprotect_munmap_pe_12_common,
+    { { &setup_mprotect_munmap_pe_15_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_1_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_16",
+    &setup_mprotect_munmap_pe_12_common,
+    { { &setup_mprotect_munmap_pe_16_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_1_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_17",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_17_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_18",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_18_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_19",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_19_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_20",
+    &setup_mprotect_munmap_pe_6_common,
+    { { &setup_mprotect_munmap_pe_20_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_21",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_21_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_22",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_22_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_23",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_23_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_24",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_24_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_25",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_25_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_26",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_26_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_pe_27",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_27_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_pe_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_p8_0",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_2_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_p8_0_1, 1, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_p8_1",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_3_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_p8_0_1, 1, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_p8_2",
+    &setup_mprotect_munmap_pe_0_common,
+    { { &setup_mprotect_munmap_pe_4_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_final,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_p8_0_1, 1, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_p8_3",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_5_proc0 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_pe_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_p8_0_1, 1, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_p4_0",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_0_proc1 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_p4_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_p8_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-mprotect_munmap_p0_0",
+    &setup_mprotect_munmap_pe_3_common,
+    { { &setup_mprotect_munmap_pe_0_proc1 }, { &setup_mprotect_munmap_pe_0_proc1 } },
+    &setup_mprotect_munmap_pe_0_procfinal,
+    &setup_mprotect_munmap_pe_0_procfinal,
+    { { &test_mprotect_munmap_p4_0_0, 0, "mprotect" },
+      { &test_mprotect_munmap_p8_0_1, 1, "munmap" } },
+    &cleanup },
+//+++ common
+  {}
+};

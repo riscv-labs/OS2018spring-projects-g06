@@ -1,0 +1,58 @@
+{
+  "tests": {
+    "munmap_pipe": {
+      "pf": {
+        "id": "munmap_pipe_pf", 
+        "diverge": "ab/ba state"
+      }, 
+      "pe": {
+        "id": "munmap_pipe_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_pipe_pe_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "b.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "munmap_pipe_pc", 
+        "diverge": "ab/b result"
+      }, 
+      "p8": {
+        "id": "munmap_pipe_p8", 
+        "diverge": "ab/b result"
+      }, 
+      "p7": {
+        "id": "munmap_pipe_p7", 
+        "diverge": "ab/ba state"
+      }, 
+      "p6": {
+        "id": "munmap_pipe_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_pipe_p6_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "munmap_pipe_p4", 
+        "diverge": "ab/b result"
+      }, 
+      "p0": {
+        "id": "munmap_pipe_p0", 
+        "diverge": "ab/b result"
+      }
+    }
+  }
+}

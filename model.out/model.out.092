@@ -1,0 +1,195 @@
+{
+  "tests": {
+    "lseek_sync": {
+      "pc": {
+        "id": "lseek_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_pc_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_sync_pc_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "lseek_sync_pb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_pb_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "lseek_sync_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_pa_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "lseek_sync_pa_1", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p98": {
+        "id": "lseek_sync_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_p98_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "lseek_sync_p90", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_p90_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }, 
+          {
+            "id": "lseek_sync_p90_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8c": {
+        "id": "lseek_sync_p8c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_p8c_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p88": {
+        "id": "lseek_sync_p88", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_p88_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_sync_p88_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p80": {
+        "id": "lseek_sync_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_p80_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "lseek_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_sync_p0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.pid": "False", 
+              "a.lseek.whence_end": "False", 
+              "a.lseek.whence_cur": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

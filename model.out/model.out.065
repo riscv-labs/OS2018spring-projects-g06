@@ -1,0 +1,890 @@
+{
+  "tests": {
+    "link_mprotect": {
+      "pf": {
+        "id": "link_mprotect_pf", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_pf_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_4", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_5", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_6", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_7", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_8", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_9", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_10", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_11", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_12", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_13", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_14", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_15", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_16", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_17", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_18", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pf_19", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "link_mprotect_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_pe_0", 
+            "assignments": {
+              "b.mprotect.pid": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pe_1", 
+            "assignments": {
+              "b.mprotect.pid": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pe_2", 
+            "assignments": {
+              "b.mprotect.pid": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd": {
+        "id": "link_mprotect_pd", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_pd_0", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_1", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_2", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_3", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_4", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_5", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_6", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_7", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_8", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_9", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_10", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_11", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_12", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_13", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_14", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_15", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_16", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_17", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_18", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pd_19", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "link_mprotect_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_pc_0", 
+            "assignments": {
+              "b.mprotect.pid": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pc_1", 
+            "assignments": {
+              "b.mprotect.pid": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pc_2", 
+            "assignments": {
+              "b.mprotect.pid": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "pb8": {
+        "id": "link_mprotect_pb8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb0": {
+        "id": "link_mprotect_pb0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_pb0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pb0_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pb0_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pb0_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pb0_4", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_pb0_5", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa8": {
+        "id": "link_mprotect_pa8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa0": {
+        "id": "link_mprotect_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_pa0_0", 
+            "assignments": {
+              "b.mprotect.pid": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "p98": {
+        "id": "link_mprotect_p98", 
+        "diverge": "ab/ba state"
+      }, 
+      "p90": {
+        "id": "link_mprotect_p90", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_p90_0", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p90_1", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p90_2", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p90_3", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p90_4", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p90_5", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }
+        ]
+      }, 
+      "p88": {
+        "id": "link_mprotect_p88", 
+        "diverge": "ab/ba state"
+      }, 
+      "p80": {
+        "id": "link_mprotect_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_p80_0", 
+            "assignments": {
+              "b.mprotect.pid": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "True", 
+              "Fs.root_dir._valid[a.link.newpn]": "False", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "link_mprotect_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_p6_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p6_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p6_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p6_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[b.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[b.mprotect.va]": "True"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "link_mprotect_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_p4_0", 
+            "assignments": {
+              "b.mprotect.pid": "False", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc0.va_map._valid[b.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "p2": {
+        "id": "link_mprotect_p2", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_p2_0", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p2_1", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "False", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p2_2", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "False", 
+              "b.mprotect.writable": "False"
+            }
+          }, 
+          {
+            "id": "link_mprotect_p2_3", 
+            "assignments": {
+              "Fs.proc1.va_map._map.writable[b.mprotect.va]": "True", 
+              "b.mprotect.pid": "True", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "True", 
+              "Fs.proc1.va_map._map.anon[b.mprotect.va]": "True", 
+              "b.mprotect.writable": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "link_mprotect_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "link_mprotect_p0_0", 
+            "assignments": {
+              "b.mprotect.pid": "True", 
+              "b.mprotect.writable": "False", 
+              "Fs.root_dir._valid[a.link.oldpn]": "False", 
+              "Fs.proc1.va_map._valid[b.mprotect.va]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

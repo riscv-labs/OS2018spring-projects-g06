@@ -1,0 +1,38 @@
+{
+  "tests": {
+    "rename_sync": {
+      "pc": {
+        "id": "rename_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_sync_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "rename_sync_pa", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "rename_sync_p8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p0": {
+        "id": "rename_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "rename_sync_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[a.rename.src]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

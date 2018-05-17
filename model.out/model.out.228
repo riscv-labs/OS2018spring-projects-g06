@@ -1,0 +1,87 @@
+{
+  "tests": {
+    "unlink_unlink": {
+      "pe": {
+        "id": "unlink_unlink_pe", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc": {
+        "id": "unlink_unlink_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "unlink_unlink_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.unlink.pn]": "True"
+            }
+          }, 
+          {
+            "id": "unlink_unlink_pc_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.unlink.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "unlink_unlink_pa", 
+        "diverge": "ab/b result"
+      }, 
+      "p9": {
+        "id": "unlink_unlink_p9", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "unlink_unlink_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "unlink_unlink_p8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.unlink.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "unlink_unlink_p6", 
+        "diverge": "ab/ba state"
+      }, 
+      "p4": {
+        "id": "unlink_unlink_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "unlink_unlink_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "True", 
+              "Fs.root_dir._valid[a.unlink.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "unlink_unlink_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "unlink_unlink_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.unlink.pn]": "False", 
+              "Fs.root_dir._valid[a.unlink.pn]": "False"
+            }
+          }, 
+          {
+            "id": "unlink_unlink_p0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[a.unlink.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

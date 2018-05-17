@@ -1,0 +1,933 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: fstat stat
+ */
+static int test_fstat_stat_pe_0_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, 0);
+  expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+static int test_fstat_stat_pe_0_1(void) {
+  struct stat st;
+  int r = stat("__f0", &st);
+  expect_result("r", r, 0);
+  expect_result("st.st_size", st.st_size, 0);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+static void setup_fstat_stat_pe_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  close(fds[0]);
+  close(fds[1]);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_fstat_stat_pe_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_fstat_stat_pe_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_fstat_stat_pe_0_final(void) {
+  unlink("__i0");
+  close(20);
+  close(21);
+}
+static void setup_fstat_stat_pe_0_procfinal(void) {
+  close(20);
+  close(21);
+}
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_pe_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_0
+// static int test_fstat_stat_pe_1_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_1
+static void setup_fstat_stat_pe_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  close(fds[0]);
+  close(fds[1]);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_fstat_stat_pe_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc0
+// static void setup_fstat_stat_pe_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc1
+static void setup_fstat_stat_pe_1_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+  close(20);
+  close(21);
+}
+// static void setup_fstat_stat_pe_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_pe_2_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_0
+// static int test_fstat_stat_pe_2_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_1
+// static void setup_fstat_stat_pe_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_fstat_stat_pe_0_common
+static void setup_fstat_stat_pe_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+// static void setup_fstat_stat_pe_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc1
+// static void setup_fstat_stat_pe_2_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_final
+// static void setup_fstat_stat_pe_2_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_pe_3_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_0
+// static int test_fstat_stat_pe_3_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_1
+// static void setup_fstat_stat_pe_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_fstat_stat_pe_1_common
+// static void setup_fstat_stat_pe_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_2_proc0
+// static void setup_fstat_stat_pe_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc1
+// static void setup_fstat_stat_pe_3_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_1_final
+// static void setup_fstat_stat_pe_3_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_pc_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_0
+static int test_fstat_stat_pc_0_1(void) {
+  struct stat st;
+  int r = stat("__f0", &st);
+  expect_result("r", r, -1);
+  expect_errno(2);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+static void setup_fstat_stat_pc_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  close(fds[0]);
+  close(fds[1]);
+}
+// static void setup_fstat_stat_pc_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(20, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc0
+// static void setup_fstat_stat_pc_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc1
+// static void setup_fstat_stat_pc_0_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_final
+// static void setup_fstat_stat_pc_0_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_pc_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("!!S_ISFIFO(st.st_mode)", !!S_ISFIFO(st.st_mode), 1);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_0
+// static int test_fstat_stat_pc_1_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pc_0_1
+// static void setup_fstat_stat_pc_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_fstat_stat_pc_0_common
+// static void setup_fstat_stat_pc_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup2(21, 10);
+//   if (r < 0) setup_error("dup2");
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_2_proc0
+// static void setup_fstat_stat_pc_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_fstat_stat_pe_0_proc1
+// static void setup_fstat_stat_pc_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_final
+// static void setup_fstat_stat_pc_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_fstat_stat_pe_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+static int test_fstat_stat_pa_0_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, 0);
+  expect_result("st.st_size", st.st_size, 0);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+// static int test_fstat_stat_pa_0_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_1
+static void setup_fstat_stat_pa_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_fstat_stat_pa_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+static void setup_fstat_stat_pa_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_fstat_stat_pa_0_final(void) {
+  unlink("__i0");
+}
+static void setup_fstat_stat_pa_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_pa_1_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pa_0_0
+// static int test_fstat_stat_pa_1_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_1
+static void setup_fstat_stat_pa_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_fstat_stat_pa_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i1", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_fstat_stat_pa_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_stat_pa_0_proc1
+static void setup_fstat_stat_pa_1_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_fstat_stat_pa_1_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_stat_pa_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_p8_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pa_0_0
+// static int test_fstat_stat_p8_0_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pc_0_1
+static void setup_fstat_stat_p8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+// static void setup_fstat_stat_p8_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_fstat_stat_pa_0_proc0
+// static void setup_fstat_stat_p8_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_stat_pa_0_proc1
+// static void setup_fstat_stat_p8_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_stat_pa_0_final
+// static void setup_fstat_stat_p8_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_stat_pa_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+static int test_fstat_stat_p4_0_0(void) {
+  struct stat st;
+  int r = fstat(10, &st);
+  expect_result("r", r, -1);
+  expect_errno(9);
+  if (r < 0) return xerrno(r);
+  /* Hack, to test for approximate equality */
+  return st.st_ino ^ st.st_nlink ^ st.st_size;
+}
+// static int test_fstat_stat_p4_0_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, 0);
+//   expect_result("st.st_size", st.st_size, 0);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pe_0_1
+// static void setup_fstat_stat_p4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_fstat_stat_pa_0_common
+// static void setup_fstat_stat_p4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_stat_pa_0_proc1
+// static void setup_fstat_stat_p4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_stat_pa_0_proc1
+// static void setup_fstat_stat_p4_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_fstat_stat_pa_0_final
+// static void setup_fstat_stat_p4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_stat_pa_0_procfinal
+
+/*
+ * calls: fstat stat
+ */
+// static int test_fstat_stat_p0_0_0(void) {
+//   struct stat st;
+//   int r = fstat(10, &st);
+//   expect_result("r", r, -1);
+//   expect_errno(9);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_p4_0_0
+// static int test_fstat_stat_p0_0_1(void) {
+//   struct stat st;
+//   int r = stat("__f0", &st);
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   if (r < 0) return xerrno(r);
+//   /* Hack, to test for approximate equality */
+//   return st.st_ino ^ st.st_nlink ^ st.st_size;
+// }
+// ^ See test_fstat_stat_pc_0_1
+static void setup_fstat_stat_p0_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_fstat_stat_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_stat_pa_0_proc1
+// static void setup_fstat_stat_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_fstat_stat_pa_0_proc1
+// static void setup_fstat_stat_p0_0_final(void) {
+//   
+// }
+// ^ See setup_fstat_stat_pa_0_procfinal
+// static void setup_fstat_stat_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_fstat_stat_pa_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-fstat_stat_pe_0",
+    &setup_fstat_stat_pe_0_common,
+    { { &setup_fstat_stat_pe_0_proc0 }, { &setup_fstat_stat_pe_0_proc1 } },
+    &setup_fstat_stat_pe_0_procfinal,
+    &setup_fstat_stat_pe_0_final,
+    { { &test_fstat_stat_pe_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pe_1",
+    &setup_fstat_stat_pe_1_common,
+    { { &setup_fstat_stat_pe_0_proc0 }, { &setup_fstat_stat_pe_0_proc1 } },
+    &setup_fstat_stat_pe_0_procfinal,
+    &setup_fstat_stat_pe_1_final,
+    { { &test_fstat_stat_pe_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pe_2",
+    &setup_fstat_stat_pe_0_common,
+    { { &setup_fstat_stat_pe_2_proc0 }, { &setup_fstat_stat_pe_0_proc1 } },
+    &setup_fstat_stat_pe_0_procfinal,
+    &setup_fstat_stat_pe_0_final,
+    { { &test_fstat_stat_pe_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pe_3",
+    &setup_fstat_stat_pe_1_common,
+    { { &setup_fstat_stat_pe_2_proc0 }, { &setup_fstat_stat_pe_0_proc1 } },
+    &setup_fstat_stat_pe_0_procfinal,
+    &setup_fstat_stat_pe_1_final,
+    { { &test_fstat_stat_pe_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pc_0",
+    &setup_fstat_stat_pc_0_common,
+    { { &setup_fstat_stat_pe_0_proc0 }, { &setup_fstat_stat_pe_0_proc1 } },
+    &setup_fstat_stat_pe_0_procfinal,
+    &setup_fstat_stat_pe_0_final,
+    { { &test_fstat_stat_pe_0_0, 0, "fstat" },
+      { &test_fstat_stat_pc_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pc_1",
+    &setup_fstat_stat_pc_0_common,
+    { { &setup_fstat_stat_pe_2_proc0 }, { &setup_fstat_stat_pe_0_proc1 } },
+    &setup_fstat_stat_pe_0_procfinal,
+    &setup_fstat_stat_pe_0_final,
+    { { &test_fstat_stat_pe_0_0, 0, "fstat" },
+      { &test_fstat_stat_pc_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pa_0",
+    &setup_fstat_stat_pa_0_common,
+    { { &setup_fstat_stat_pa_0_proc0 }, { &setup_fstat_stat_pa_0_proc1 } },
+    &setup_fstat_stat_pa_0_procfinal,
+    &setup_fstat_stat_pa_0_final,
+    { { &test_fstat_stat_pa_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_pa_1",
+    &setup_fstat_stat_pa_1_common,
+    { { &setup_fstat_stat_pa_1_proc0 }, { &setup_fstat_stat_pa_0_proc1 } },
+    &setup_fstat_stat_pa_0_procfinal,
+    &setup_fstat_stat_pa_1_final,
+    { { &test_fstat_stat_pa_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_p8_0",
+    &setup_fstat_stat_p8_0_common,
+    { { &setup_fstat_stat_pa_0_proc0 }, { &setup_fstat_stat_pa_0_proc1 } },
+    &setup_fstat_stat_pa_0_procfinal,
+    &setup_fstat_stat_pa_0_final,
+    { { &test_fstat_stat_pa_0_0, 0, "fstat" },
+      { &test_fstat_stat_pc_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_p4_0",
+    &setup_fstat_stat_pa_0_common,
+    { { &setup_fstat_stat_pa_0_proc1 }, { &setup_fstat_stat_pa_0_proc1 } },
+    &setup_fstat_stat_pa_0_procfinal,
+    &setup_fstat_stat_pa_0_final,
+    { { &test_fstat_stat_p4_0_0, 0, "fstat" },
+      { &test_fstat_stat_pe_0_1, 0, "stat" } },
+    &cleanup },
+  { "fs-fstat_stat_p0_0",
+    &setup_fstat_stat_p0_0_common,
+    { { &setup_fstat_stat_pa_0_proc1 }, { &setup_fstat_stat_pa_0_proc1 } },
+    &setup_fstat_stat_pa_0_procfinal,
+    &setup_fstat_stat_pa_0_procfinal,
+    { { &test_fstat_stat_p4_0_0, 0, "fstat" },
+      { &test_fstat_stat_pc_0_1, 0, "stat" } },
+    &cleanup },
+//+++ common
+  {}
+};
