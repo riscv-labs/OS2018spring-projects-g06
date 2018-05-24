@@ -1,0 +1,282 @@
+{
+  "tests": {
+    "pipe_pwrite": {
+      "pfe": {
+        "id": "pipe_pwrite_pfe", 
+        "diverge": "ab/ba state"
+      }, 
+      "pfc": {
+        "id": "pipe_pwrite_pfc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_pfc_0", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.pwrite.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.pwrite.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pipe_pwrite_pfc_1", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.pwrite.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.pwrite.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pf8": {
+        "id": "pipe_pwrite_pf8", 
+        "diverge": "a/ba result"
+      }, 
+      "pf0": {
+        "id": "pipe_pwrite_pf0", 
+        "diverge": "a/ba result"
+      }, 
+      "pe": {
+        "id": "pipe_pwrite_pe", 
+        "diverge": "ab/b result"
+      }, 
+      "pde": {
+        "id": "pipe_pwrite_pde", 
+        "diverge": "ab/ba state"
+      }, 
+      "pdc": {
+        "id": "pipe_pwrite_pdc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_pdc_0", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pipe_pwrite_pdc_1", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "pipe_pwrite_pd8", 
+        "diverge": "a/ba result"
+      }, 
+      "pd0": {
+        "id": "pipe_pwrite_pd0", 
+        "diverge": "a/ba result"
+      }, 
+      "pce": {
+        "id": "pipe_pwrite_pce", 
+        "diverge": "ab/ba state"
+      }, 
+      "pcc": {
+        "id": "pipe_pwrite_pcc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_pcc_0", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pipe_pwrite_pcc_1", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pc8": {
+        "id": "pipe_pwrite_pc8", 
+        "diverge": "a/ba result"
+      }, 
+      "pc0": {
+        "id": "pipe_pwrite_pc0", 
+        "diverge": "a/ba result"
+      }, 
+      "pb8": {
+        "id": "pipe_pwrite_pb8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb0": {
+        "id": "pipe_pwrite_pb0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_pb0_0", 
+            "assignments": {
+              "b.pwrite.pid": "False", 
+              "Fs.proc0.fd_map._valid[b.pwrite.fd]": "False", 
+              "a.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "pipe_pwrite_pa", 
+        "diverge": "a/ba result"
+      }, 
+      "p8": {
+        "id": "pipe_pwrite_p8", 
+        "diverge": "a/ba result"
+      }, 
+      "p7c": {
+        "id": "pipe_pwrite_p7c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p78": {
+        "id": "pipe_pwrite_p78", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_p78_0", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.pwrite.fd]": "False", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.pwrite.fd]": "True"
+            }
+          }, 
+          {
+            "id": "pipe_pwrite_p78_1", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "Fs.proc1.fd_map._map.pipewriter[b.pwrite.fd]": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.pwrite.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p70": {
+        "id": "pipe_pwrite_p70", 
+        "diverge": "a/ba result"
+      }, 
+      "p6": {
+        "id": "pipe_pwrite_p6", 
+        "diverge": "a/ba result"
+      }, 
+      "p5e": {
+        "id": "pipe_pwrite_p5e", 
+        "diverge": "ab/ba state"
+      }, 
+      "p5c": {
+        "id": "pipe_pwrite_p5c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_p5c_0", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pipe_pwrite_p5c_1", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p58": {
+        "id": "pipe_pwrite_p58", 
+        "diverge": "a/ba result"
+      }, 
+      "p50": {
+        "id": "pipe_pwrite_p50", 
+        "diverge": "a/ba result"
+      }, 
+      "p4e": {
+        "id": "pipe_pwrite_p4e", 
+        "diverge": "ab/ba state"
+      }, 
+      "p4c": {
+        "id": "pipe_pwrite_p4c", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_p4c_0", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pipe_pwrite_p4c_1", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.pwrite.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p48": {
+        "id": "pipe_pwrite_p48", 
+        "diverge": "a/ba result"
+      }, 
+      "p40": {
+        "id": "pipe_pwrite_p40", 
+        "diverge": "a/ba result"
+      }, 
+      "p38": {
+        "id": "pipe_pwrite_p38", 
+        "diverge": "ab/ba state"
+      }, 
+      "p30": {
+        "id": "pipe_pwrite_p30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pwrite_p30_0", 
+            "assignments": {
+              "b.pwrite.pid": "True", 
+              "a.pipe.pid": "False", 
+              "Fs.proc1.fd_map._valid[b.pwrite.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p2": {
+        "id": "pipe_pwrite_p2", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "pipe_pwrite_p0", 
+        "diverge": "a/ba result"
+      }
+    }
+  }
+}

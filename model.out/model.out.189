@@ -1,0 +1,74 @@
+{
+  "tests": {
+    "pread_reboot": {
+      "pc": {
+        "id": "pread_reboot_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_reboot_pc_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "pread_reboot_pb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_reboot_pb_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "pread_reboot_pa", 
+        "diverge": "a/ba result"
+      }, 
+      "p9": {
+        "id": "pread_reboot_p9", 
+        "diverge": "a/ba result"
+      }, 
+      "p8c": {
+        "id": "pread_reboot_p8c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p88": {
+        "id": "pread_reboot_p88", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_reboot_p88_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p80": {
+        "id": "pread_reboot_p80", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "pread_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_reboot_p0_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

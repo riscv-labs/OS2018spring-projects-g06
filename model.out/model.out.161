@@ -1,0 +1,34 @@
+{
+  "tests": {
+    "munmap_stat": {
+      "p8": {
+        "id": "munmap_stat_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_stat_p8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "munmap_stat_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_stat_p0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

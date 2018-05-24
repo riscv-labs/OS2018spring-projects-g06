@@ -1,0 +1,19 @@
+{
+  "tests": {
+    "munmap_sync": {
+      "p": {
+        "id": "munmap_sync_p", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_sync_p_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

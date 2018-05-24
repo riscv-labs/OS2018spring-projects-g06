@@ -1,0 +1,352 @@
+{
+  "tests": {
+    "munmap_open": {
+      "pe": {
+        "id": "munmap_open_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pe_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "True", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pde": {
+        "id": "munmap_open_pde", 
+        "diverge": "ab/ba state"
+      }, 
+      "pdc": {
+        "id": "munmap_open_pdc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pdc_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "True", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "munmap_open_pd8", 
+        "diverge": "ab/b result"
+      }, 
+      "pd6": {
+        "id": "munmap_open_pd6", 
+        "diverge": "ab/ba state"
+      }, 
+      "pd4": {
+        "id": "munmap_open_pd4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pd4_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "True", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pd0": {
+        "id": "munmap_open_pd0", 
+        "diverge": "ab/b result"
+      }, 
+      "pcc": {
+        "id": "munmap_open_pcc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pcc_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pc8": {
+        "id": "munmap_open_pc8", 
+        "diverge": "ab/b result"
+      }, 
+      "pc4": {
+        "id": "munmap_open_pc4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pc4_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pc0": {
+        "id": "munmap_open_pc0", 
+        "diverge": "ab/b result"
+      }, 
+      "pbc": {
+        "id": "munmap_open_pbc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "munmap_open_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pb8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "True", 
+              "Fs.root_dir._valid[b.open.pn]": "False", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "munmap_open_pb0", 
+        "diverge": "ab/b result"
+      }, 
+      "pac": {
+        "id": "munmap_open_pac", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa8": {
+        "id": "munmap_open_pa8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_pa8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "True", 
+              "Fs.root_dir._valid[b.open.pn]": "False", 
+              "b.open.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pa0": {
+        "id": "munmap_open_pa0", 
+        "diverge": "ab/b result"
+      }, 
+      "p9c": {
+        "id": "munmap_open_p9c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p98": {
+        "id": "munmap_open_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p98_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "False", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p90": {
+        "id": "munmap_open_p90", 
+        "diverge": "ab/b result"
+      }, 
+      "p8c": {
+        "id": "munmap_open_p8c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p88": {
+        "id": "munmap_open_p88", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p88_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "True", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "False", 
+              "b.open.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p80": {
+        "id": "munmap_open_p80", 
+        "diverge": "ab/b result"
+      }, 
+      "p7c": {
+        "id": "munmap_open_p7c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p78": {
+        "id": "munmap_open_p78", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p78_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "False", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "True", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p70": {
+        "id": "munmap_open_p70", 
+        "diverge": "ab/b result"
+      }, 
+      "p6c": {
+        "id": "munmap_open_p6c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p68": {
+        "id": "munmap_open_p68", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p68_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "False", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "True", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p60": {
+        "id": "munmap_open_p60", 
+        "diverge": "ab/b result"
+      }, 
+      "p58": {
+        "id": "munmap_open_p58", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p58_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "False", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p50": {
+        "id": "munmap_open_p50", 
+        "diverge": "ab/b result"
+      }, 
+      "p48": {
+        "id": "munmap_open_p48", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p48_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "False", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "True", 
+              "b.open.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p40": {
+        "id": "munmap_open_p40", 
+        "diverge": "ab/b result"
+      }, 
+      "p0": {
+        "id": "munmap_open_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_open_p0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "b.open.anyfd": "False", 
+              "b.open.creat": "False", 
+              "a.munmap.pid": "False", 
+              "b.open.excl": "False", 
+              "b.open.trunc": "False", 
+              "Fs.root_dir._valid[b.open.pn]": "False", 
+              "b.open.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

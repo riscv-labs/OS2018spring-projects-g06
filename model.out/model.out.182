@@ -1,0 +1,56 @@
+{
+  "tests": {
+    "pipe_stat": {
+      "pf": {
+        "id": "pipe_stat_pf", 
+        "diverge": "ab/ba state"
+      }, 
+      "pe": {
+        "id": "pipe_stat_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_stat_pe_0", 
+            "assignments": {
+              "a.pipe.pid": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "pipe_stat_pc", 
+        "diverge": "a/ba result"
+      }, 
+      "p8": {
+        "id": "pipe_stat_p8", 
+        "diverge": "a/ba result"
+      }, 
+      "p7": {
+        "id": "pipe_stat_p7", 
+        "diverge": "ab/ba state"
+      }, 
+      "p6": {
+        "id": "pipe_stat_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_stat_p6_0", 
+            "assignments": {
+              "a.pipe.pid": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "pipe_stat_p4", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "pipe_stat_p0", 
+        "diverge": "a/ba result"
+      }
+    }
+  }
+}

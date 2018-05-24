@@ -1,0 +1,133 @@
+{
+  "tests": {
+    "close_stat": {
+      "pc": {
+        "id": "close_stat_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_stat_pc_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "close_stat_pc_1", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "close_stat_pc_2", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "close_stat_pc_3", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "close_stat_pc_4", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }, 
+          {
+            "id": "close_stat_pc_5", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "close_stat_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_stat_p8_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "close_stat_p8_1", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }, 
+          {
+            "id": "close_stat_p8_2", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.close.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.close.fd]": "True", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "close_stat_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_stat_p4_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "close_stat_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "close_stat_p0_0", 
+            "assignments": {
+              "a.close.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.close.fd]": "False", 
+              "Fs.root_dir._valid[b.stat.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

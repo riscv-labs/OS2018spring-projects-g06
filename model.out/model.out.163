@@ -1,0 +1,38 @@
+{
+  "tests": {
+    "munmap_unlink": {
+      "pc": {
+        "id": "munmap_unlink_pc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "munmap_unlink_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_unlink_p8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.unlink.pn]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "munmap_unlink_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_unlink_p0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.unlink.pn]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

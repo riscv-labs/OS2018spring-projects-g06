@@ -1,0 +1,111 @@
+{
+  "tests": {
+    "read_sync": {
+      "pe": {
+        "id": "read_sync_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_pe_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.read.fd]": "True", 
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "read_sync_pd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_pd8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.read.fd]": "True", 
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pd0": {
+        "id": "read_sync_pd0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_pd0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.read.fd]": "True", 
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "read_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_pc_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.read.fd]": "True", 
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "read_sync_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_pa_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.read.fd]": "False", 
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p9": {
+        "id": "read_sync_p9", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "read_sync_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_p8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[a.read.fd]": "False", 
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "read_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "read_sync_p0_0", 
+            "assignments": {
+              "a.read.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.read.fd]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

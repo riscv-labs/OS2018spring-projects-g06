@@ -1,0 +1,428 @@
+{
+  "tests": {
+    "fstat_rename": {
+      "pf": {
+        "id": "fstat_rename_pf", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pf_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pf_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pf_2", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pf_3", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pec": {
+        "id": "fstat_rename_pec", 
+        "diverge": "ab/ba state"
+      }, 
+      "pe8": {
+        "id": "fstat_rename_pe8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pe8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_2", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_3", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_4", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_5", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_6", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_7", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_8", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe8_9", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pe0": {
+        "id": "fstat_rename_pe0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pe0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe0_2", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pe0_3", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True", 
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "fstat_rename_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pc_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "fstat_rename_pb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pb_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pb_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "pae": {
+        "id": "fstat_rename_pae", 
+        "diverge": "ab/ba state"
+      }, 
+      "pac": {
+        "id": "fstat_rename_pac", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pac_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pac_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pac_2", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa8": {
+        "id": "fstat_rename_pa8", 
+        "diverge": "a/ba result"
+      }, 
+      "pa0": {
+        "id": "fstat_rename_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_pa0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }, 
+          {
+            "id": "fstat_rename_pa0_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "fstat_rename_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_p8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "True", 
+              "a.fstat.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.fstat.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "fstat_rename_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_p6_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p58": {
+        "id": "fstat_rename_p58", 
+        "diverge": "ab/ba state"
+      }, 
+      "p50": {
+        "id": "fstat_rename_p50", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_p50_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "fstat_rename_p50_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "fstat_rename_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "fstat_rename_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fstat_rename_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.fd_map._valid[a.fstat.fd]": "False", 
+              "a.fstat.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tests": {
+    "pipe_reboot": {
+      "pe": {
+        "id": "pipe_reboot_pe", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc": {
+        "id": "pipe_reboot_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_reboot_pc_0", 
+            "assignments": {
+              "a.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "pipe_reboot_p8", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "pipe_reboot_p0", 
+        "diverge": "a/ba result"
+      }
+    }
+  }
+}

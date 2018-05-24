@@ -1,0 +1,2309 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: munmap munmap
+ */
+static int test_munmap_munmap_p8_0_0(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = munmap(va, 4096);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static int test_munmap_munmap_p8_0_1(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = munmap(va, 4096);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_munmap_munmap_p8_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+static void setup_munmap_munmap_p8_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_munmap_munmap_p8_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_munmap_munmap_p8_0_final(void) {
+  
+}
+static void setup_munmap_munmap_p8_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_1_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+static int test_munmap_munmap_p8_1_1(void) {
+  int* va = (int*) 0x12345601000UL;
+  int r = munmap(va, 4096);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static void setup_munmap_munmap_p8_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+// static void setup_munmap_munmap_p8_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_1_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_1_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_2_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_2_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+static void setup_munmap_munmap_p8_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_munmap_munmap_p8_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+static void setup_munmap_munmap_p8_2_final(void) {
+  unlink("__i0");
+}
+// static void setup_munmap_munmap_p8_2_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_3_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_3_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+static void setup_munmap_munmap_p8_3_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_munmap_munmap_p8_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i1", 0x0);
+}
+// static void setup_munmap_munmap_p8_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+static void setup_munmap_munmap_p8_3_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_munmap_munmap_p8_3_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_4_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_4_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_4_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_5_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_5_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_5_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_6_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_6_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_6_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_6_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_6_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_7_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_7_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_munmap_munmap_p8_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_7_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_7_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_8_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_8_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_8_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_munmap_munmap_p8_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_8_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_8_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_9_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_9_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_9_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_munmap_munmap_p8_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_9_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_9_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_10_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_10_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_10_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_munmap_munmap_p8_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_10_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_10_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_11_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_11_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_3_common
+static void setup_munmap_munmap_p8_11_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i1", 0x0);
+}
+// static void setup_munmap_munmap_p8_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_11_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_munmap_munmap_p8_3_final
+// static void setup_munmap_munmap_p8_11_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_12_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_12_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_12_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_3_common
+static void setup_munmap_munmap_p8_12_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i1", 0x0);
+}
+// static void setup_munmap_munmap_p8_12_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_12_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_munmap_munmap_p8_3_final
+// static void setup_munmap_munmap_p8_12_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_13_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_13_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_13_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_13_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_munmap_munmap_p8_13_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_13_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_13_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_14_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_14_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_14_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_14_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_14_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_14_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_14_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_15_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_15_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_15_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_15_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_munmap_munmap_p8_15_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_15_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_15_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_16_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_16_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_16_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_16_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_munmap_munmap_p8_16_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_16_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_16_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_17_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_17_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+static void setup_munmap_munmap_p8_17_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_munmap_munmap_p8_17_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x1000);
+}
+// static void setup_munmap_munmap_p8_17_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_17_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_17_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_18_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_18_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_18_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_18_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_18_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_18_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_18_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_19_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_19_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_19_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_17_common
+static void setup_munmap_munmap_p8_19_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x1000);
+}
+// static void setup_munmap_munmap_p8_19_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_19_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_19_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_20_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_20_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_20_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_20_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_20_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_20_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_20_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_21_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_21_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_21_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_21_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_21_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_21_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_21_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_22_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_22_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_22_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_22_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_munmap_munmap_p8_22_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_22_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_22_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_23_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_23_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_23_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_23_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_23_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_23_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_23_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_24_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_24_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_24_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_3_common
+static void setup_munmap_munmap_p8_24_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i1", 0x0);
+}
+// static void setup_munmap_munmap_p8_24_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_24_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_munmap_munmap_p8_3_final
+// static void setup_munmap_munmap_p8_24_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_25_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_25_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_25_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_17_common
+static void setup_munmap_munmap_p8_25_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 0, "__i0", 0x1000);
+}
+// static void setup_munmap_munmap_p8_25_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_25_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_25_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_26_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_26_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_26_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_26_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_26_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_26_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_26_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_27_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_27_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_27_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   r = write(fd, dataval0, 4096);
+//   if (r != 4096) setup_error("write => %d", r);
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_17_common
+static void setup_munmap_munmap_p8_27_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_file(0x12345601000, 1, "__i0", 0x1000);
+}
+// static void setup_munmap_munmap_p8_27_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_27_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_27_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_28_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_28_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_28_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_28_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_munmap_munmap_p8_28_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_28_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_28_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_29_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_29_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_29_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_29_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_anon(0x12345601000, 1, 0);
+}
+// static void setup_munmap_munmap_p8_29_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_29_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_29_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_30_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_30_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_30_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_30_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_munmap_munmap_p8_30_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_30_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_30_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_31_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_31_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_31_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+static void setup_munmap_munmap_p8_31_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_anon(0x12345601000, 0, 0);
+}
+// static void setup_munmap_munmap_p8_31_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_31_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_31_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_32_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_32_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_32_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_32_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_file(0x12345601000, 1, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_32_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_32_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_32_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_33_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_33_1(void) {
+//   int* va = (int*) 0x12345601000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_1_1
+// static void setup_munmap_munmap_p8_33_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+static void setup_munmap_munmap_p8_33_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+  init_map_file(0x12345601000, 0, "__i0", 0x0);
+}
+// static void setup_munmap_munmap_p8_33_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_33_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_33_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_34_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_34_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static void setup_munmap_munmap_p8_34_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+// static void setup_munmap_munmap_p8_34_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_munmap_munmap_p8_4_proc0
+// static void setup_munmap_munmap_p8_34_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_34_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_34_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_35_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_35_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static void setup_munmap_munmap_p8_35_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+// static void setup_munmap_munmap_p8_35_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_munmap_munmap_p8_15_proc0
+// static void setup_munmap_munmap_p8_35_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_35_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_35_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_36_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_36_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static void setup_munmap_munmap_p8_36_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_munmap_munmap_p8_2_common
+// static void setup_munmap_munmap_p8_36_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_munmap_munmap_p8_14_proc0
+// static void setup_munmap_munmap_p8_36_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_36_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_munmap_munmap_p8_2_final
+// static void setup_munmap_munmap_p8_36_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p8_37_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p8_37_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static void setup_munmap_munmap_p8_37_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+// static void setup_munmap_munmap_p8_37_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_munmap_munmap_p8_16_proc0
+// static void setup_munmap_munmap_p8_37_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p8_37_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p8_37_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+/*
+ * calls: munmap munmap
+ */
+// static int test_munmap_munmap_p0_0_0(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static int test_munmap_munmap_p0_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = munmap(va, 4096);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_munmap_munmap_p8_0_1
+// static void setup_munmap_munmap_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_common
+// static void setup_munmap_munmap_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_munmap_munmap_p8_0_proc1
+// static void setup_munmap_munmap_p0_0_final(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+// static void setup_munmap_munmap_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_munmap_munmap_p8_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-munmap_munmap_p8_0",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_0_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_final,
+    { { &test_munmap_munmap_p8_0_0, 0, "munmap" },
+      { &test_munmap_munmap_p8_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_1",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_0_proc1 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_2",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_2_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_3",
+    &setup_munmap_munmap_p8_3_common,
+    { { &setup_munmap_munmap_p8_3_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_3_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_4",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_4_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_5",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_5_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_6",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_6_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_7",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_7_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_8",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_8_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_9",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_9_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_10",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_10_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_11",
+    &setup_munmap_munmap_p8_3_common,
+    { { &setup_munmap_munmap_p8_11_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_3_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_12",
+    &setup_munmap_munmap_p8_3_common,
+    { { &setup_munmap_munmap_p8_12_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_3_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_13",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_13_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_14",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_14_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_15",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_15_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_16",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_16_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_17",
+    &setup_munmap_munmap_p8_17_common,
+    { { &setup_munmap_munmap_p8_17_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_18",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_18_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_19",
+    &setup_munmap_munmap_p8_17_common,
+    { { &setup_munmap_munmap_p8_19_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_20",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_20_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_21",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_21_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_22",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_22_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_23",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_23_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_24",
+    &setup_munmap_munmap_p8_3_common,
+    { { &setup_munmap_munmap_p8_24_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_3_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_25",
+    &setup_munmap_munmap_p8_17_common,
+    { { &setup_munmap_munmap_p8_25_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_26",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_26_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_27",
+    &setup_munmap_munmap_p8_17_common,
+    { { &setup_munmap_munmap_p8_27_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_28",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_28_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_29",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_29_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_30",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_30_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_31",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_31_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_32",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_32_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_33",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_33_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_1_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_34",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_4_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_35",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_15_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_36",
+    &setup_munmap_munmap_p8_2_common,
+    { { &setup_munmap_munmap_p8_14_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_2_final,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p8_37",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_16_proc0 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_0_1, 0, "munmap" } },
+    &cleanup },
+  { "fs-munmap_munmap_p0_0",
+    &setup_munmap_munmap_p8_0_common,
+    { { &setup_munmap_munmap_p8_0_proc1 }, { &setup_munmap_munmap_p8_0_proc1 } },
+    &setup_munmap_munmap_p8_0_procfinal,
+    &setup_munmap_munmap_p8_0_procfinal,
+    { { &test_munmap_munmap_p8_0_1, 0, "munmap" },
+      { &test_munmap_munmap_p8_0_1, 1, "munmap" } },
+    &cleanup },
+//+++ common
+  {}
+};

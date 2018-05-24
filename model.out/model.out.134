@@ -1,0 +1,170 @@
+{
+  "tests": {
+    "mmap_reboot": {
+      "pe": {
+        "id": "mmap_reboot_pe", 
+        "diverge": "ab/ba state"
+      }, 
+      "pc": {
+        "id": "mmap_reboot_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_pc_0", 
+            "assignments": {
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "True", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "mmap_reboot_pb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_pb_0", 
+            "assignments": {
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "mmap_reboot_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_pa_0", 
+            "assignments": {
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "mmap_reboot_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_p8_0", 
+            "assignments": {
+              "a.mmap.fixed": "True", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p7": {
+        "id": "mmap_reboot_p7", 
+        "diverge": "ab/ba state"
+      }, 
+      "p6": {
+        "id": "mmap_reboot_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_p6_0", 
+            "assignments": {
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.pid": "False"
+            }
+          }, 
+          {
+            "id": "mmap_reboot_p6_1", 
+            "assignments": {
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "True", 
+              "a.mmap.writable": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "mmap_reboot_p4", 
+        "diverge": "a/ba result"
+      }, 
+      "p3": {
+        "id": "mmap_reboot_p3", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_p3_0", 
+            "assignments": {
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p28": {
+        "id": "mmap_reboot_p28", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_p28_0", 
+            "assignments": {
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.pid": "False"
+            }
+          }, 
+          {
+            "id": "mmap_reboot_p28_1", 
+            "assignments": {
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "True", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "True", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p20": {
+        "id": "mmap_reboot_p20", 
+        "diverge": "a/ba result"
+      }, 
+      "p0": {
+        "id": "mmap_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mmap_reboot_p0_0", 
+            "assignments": {
+              "a.mmap.fixed": "False", 
+              "a.mmap.anon": "False", 
+              "a.mmap.writable": "False", 
+              "Fs.proc0.fd_map._valid[a.mmap.fd]": "False", 
+              "a.mmap.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

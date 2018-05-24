@@ -1,0 +1,4570 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: link mprotect
+ */
+static int test_link_mprotect_pf_0_0(void) {
+  int r = link("__f0", "__f1");
+  expect_result("r", r, -1);
+  expect_errno(17);
+  return xerrno(r);
+}
+static int test_link_mprotect_pf_0_1(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+static void setup_link_mprotect_pf_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+static void setup_link_mprotect_pf_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x0);
+}
+static void setup_link_mprotect_pf_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_link_mprotect_pf_0_final(void) {
+  unlink("__i0");
+}
+static void setup_link_mprotect_pf_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_1_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pf_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_link_mprotect_pf_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_pf_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+static void setup_link_mprotect_pf_1_final(void) {
+  unlink("__i0");
+  unlink("__i1");
+}
+// static void setup_link_mprotect_pf_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_2_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pf_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+static void setup_link_mprotect_pf_2_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i2", 0x0);
+}
+// static void setup_link_mprotect_pf_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+static void setup_link_mprotect_pf_2_final(void) {
+  unlink("__i2");
+  unlink("__i1");
+  unlink("__i0");
+}
+// static void setup_link_mprotect_pf_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_3_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+static void setup_link_mprotect_pf_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x0);
+}
+// static void setup_link_mprotect_pf_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_3_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pf_3_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_4_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+static void setup_link_mprotect_pf_4_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i1", 0x0);
+}
+// static void setup_link_mprotect_pf_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_4_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pf_4_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_5_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+static void setup_link_mprotect_pf_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 0, 0);
+}
+// static void setup_link_mprotect_pf_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_5_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pf_5_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_6_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_6_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+static void setup_link_mprotect_pf_6_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x0);
+}
+// static void setup_link_mprotect_pf_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_6_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pf_6_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_7_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_7_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+static void setup_link_mprotect_pf_7_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_anon(0x12345600000, 1, 0);
+}
+// static void setup_link_mprotect_pf_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_7_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pf_7_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_8_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_8_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i2", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_2_common
+static void setup_link_mprotect_pf_8_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i2", 0x0);
+}
+// static void setup_link_mprotect_pf_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_8_final(void) {
+//   unlink("__i2");
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_2_final
+// static void setup_link_mprotect_pf_8_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_9_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_9_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pf_9_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i0", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_link_mprotect_pf_9_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_4_proc0
+// static void setup_link_mprotect_pf_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+static void setup_link_mprotect_pf_9_final(void) {
+  unlink("__i1");
+  unlink("__i0");
+}
+// static void setup_link_mprotect_pf_9_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_10_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_10_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pf_10_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_pf_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_10_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_10_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_11_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_11_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_9_common
+// static void setup_link_mprotect_pf_11_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_6_proc0
+// static void setup_link_mprotect_pf_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_11_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pf_11_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_12_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_12_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_12_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pf_12_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_pf_12_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_12_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_12_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_13_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pf_13_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_13_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pf_13_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_pf_13_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_13_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_13_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+static int test_link_mprotect_pf_14_0(void) {
+  int r = link("__f0", "__f0");
+  expect_result("r", r, -1);
+  expect_errno(17);
+  return xerrno(r);
+}
+// static int test_link_mprotect_pf_14_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pf_14_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_link_mprotect_pf_14_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_4_proc0
+// static void setup_link_mprotect_pf_14_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_14_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pf_14_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_15_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pf_15_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pf_15_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+// static void setup_link_mprotect_pf_15_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_pf_15_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_15_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_15_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_16_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pf_16_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_16_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_14_common
+// static void setup_link_mprotect_pf_16_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_6_proc0
+// static void setup_link_mprotect_pf_16_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_16_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pf_16_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_17_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pf_17_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_17_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pf_17_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_pf_17_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_17_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_17_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_18_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pf_18_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_18_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pf_18_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_pf_18_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_18_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_18_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pf_19_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pf_19_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pf_19_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pf_19_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_pf_19_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pf_19_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pf_19_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pe_0_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+static int test_link_mprotect_pe_0_1(void) {
+  int* va = (int*) 0x12345600000UL;
+  int r = mprotect(va, 4096, PROT_READ);
+  expect_result("r", r, -1);
+  expect_errno(12);
+  return xerrno(r);
+}
+// static void setup_link_mprotect_pe_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pe_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pe_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pe_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pe_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pe_1_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pe_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_pe_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pe_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pe_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pe_1_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pe_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pe_2_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pe_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_pe_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pe_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pe_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pe_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pe_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_0_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pd_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_pd_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_1_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_9_common
+// static void setup_link_mprotect_pd_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_4_proc0
+// static void setup_link_mprotect_pd_1_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pd_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_2_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pd_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i2", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+  r = link("__i1", "__f1");
+  if (r < 0) setup_error("link");
+}
+// static void setup_link_mprotect_pd_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i2", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_2_proc0
+static void setup_link_mprotect_pd_2_final(void) {
+  unlink("__i0");
+  unlink("__i2");
+  unlink("__i1");
+}
+// static void setup_link_mprotect_pd_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_3_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pd_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_4_proc0
+// static void setup_link_mprotect_pd_3_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pd_3_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_4_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pd_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_pd_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_4_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_5_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_9_common
+// static void setup_link_mprotect_pd_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_6_proc0
+// static void setup_link_mprotect_pd_5_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pd_5_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_6_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_6_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_6_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pd_6_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_6_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_pd_6_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_6_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_7_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pd_7_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_7_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_14_common
+// static void setup_link_mprotect_pd_7_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_7_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_4_proc0
+// static void setup_link_mprotect_pd_7_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pd_7_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_8_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_8_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_8_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pd_8_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_8_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_pd_8_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pd_8_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_9_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_9_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_9_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pd_9_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_9_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_pd_9_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pd_9_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_10_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_10_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_10_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pd_10_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_10_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_pd_10_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pd_10_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_11_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_11_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_11_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pd_11_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_11_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_pd_11_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pd_11_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_12_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_12_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_12_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pd_12_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_12_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_6_proc0
+// static void setup_link_mprotect_pd_12_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pd_12_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_13_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_13_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_13_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pd_13_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_13_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_pd_13_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_13_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_14_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pd_14_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_14_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pd_14_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_14_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_pd_14_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_14_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_15_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pd_15_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_15_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_14_common
+// static void setup_link_mprotect_pd_15_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_15_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_6_proc0
+// static void setup_link_mprotect_pd_15_final(void) {
+//   unlink("__i1");
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_9_final
+// static void setup_link_mprotect_pd_15_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_16_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pd_16_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_16_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pd_16_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_16_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_pd_16_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_16_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_17_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pd_17_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_17_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pd_17_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_17_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_pd_17_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_17_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_18_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pd_18_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_18_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pd_18_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_18_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_pd_18_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pd_18_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pd_19_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pd_19_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pd_19_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i2", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i2", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pd_2_common
+// static void setup_link_mprotect_pd_19_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pd_19_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i2", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_8_proc0
+// static void setup_link_mprotect_pd_19_final(void) {
+//   unlink("__i0");
+//   unlink("__i2");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pd_2_final
+// static void setup_link_mprotect_pd_19_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pc_0_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pc_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_pc_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i0", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_0_common
+// static void setup_link_mprotect_pc_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pc_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pc_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pc_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pc_1_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_0
+// static int test_link_mprotect_pc_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_pc_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+//   r = link("__i1", "__f1");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_1_common
+// static void setup_link_mprotect_pc_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pc_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pc_1_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pc_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pc_2_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(17);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_14_0
+// static int test_link_mprotect_pc_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_pc_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pc_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pc_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pc_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pc_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+static int test_link_mprotect_pb0_0_0(void) {
+  int r = link("__f0", "__f1");
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static int test_link_mprotect_pb0_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pb0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+static void setup_link_mprotect_pb0_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i0", 0x2000);
+}
+// static void setup_link_mprotect_pb0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pb0_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pb0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pb0_1_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_pb0_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_pb0_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i1", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = link("__i0", "__f0");
+  if (r < 0) setup_error("link");
+}
+static void setup_link_mprotect_pb0_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 0, "__i1", 0x2000);
+}
+// static void setup_link_mprotect_pb0_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pb0_1_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pb0_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pb0_2_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_pb0_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pb0_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pb0_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_pb0_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pb0_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pb0_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pb0_3_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_pb0_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pb0_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pb0_1_common
+static void setup_link_mprotect_pb0_3_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i1", 0x2000);
+}
+// static void setup_link_mprotect_pb0_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pb0_3_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_pb0_3_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pb0_4_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_pb0_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pb0_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pb0_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_pb0_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pb0_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pb0_4_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pb0_5_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_pb0_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_pb0_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+static void setup_link_mprotect_pb0_5_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  init_map_file(0x12345600000, 1, "__i0", 0x2000);
+}
+// static void setup_link_mprotect_pb0_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pb0_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pb0_5_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_pa0_0_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_pa0_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_pa0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_pa0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pa0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_pa0_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_pa0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p90_0_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p90_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p90_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_p90_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p90_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x2000);
+// }
+// ^ See setup_link_mprotect_pb0_0_proc0
+// static void setup_link_mprotect_p90_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p90_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p90_1_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p90_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p90_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pb0_1_common
+// static void setup_link_mprotect_p90_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p90_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i1", 0x2000);
+// }
+// ^ See setup_link_mprotect_pb0_1_proc0
+// static void setup_link_mprotect_p90_1_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_p90_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p90_2_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p90_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p90_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_p90_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p90_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_p90_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p90_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p90_3_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p90_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p90_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   fd = open("__i1", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i1", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pb0_1_common
+// static void setup_link_mprotect_p90_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p90_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i1", 0x2000);
+// }
+// ^ See setup_link_mprotect_pb0_3_proc0
+// static void setup_link_mprotect_p90_3_final(void) {
+//   unlink("__i0");
+//   unlink("__i1");
+// }
+// ^ See setup_link_mprotect_pf_1_final
+// static void setup_link_mprotect_p90_3_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p90_4_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p90_4_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p90_4_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_p90_4_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p90_4_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_p90_4_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p90_4_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p90_5_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p90_5_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p90_5_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_p90_5_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p90_5_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x2000);
+// }
+// ^ See setup_link_mprotect_pb0_5_proc0
+// static void setup_link_mprotect_p90_5_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p90_5_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p80_0_0(void) {
+//   int r = link("__f0", "__f1");
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pb0_0_0
+// static int test_link_mprotect_p80_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_p80_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = link("__i0", "__f0");
+//   if (r < 0) setup_error("link");
+// }
+// ^ See setup_link_mprotect_pf_15_common
+// static void setup_link_mprotect_p80_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p80_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p80_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p80_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+static int test_link_mprotect_p6_0_0(void) {
+  int r = link("__f0", "__f0");
+  expect_result("r", r, -1);
+  expect_errno(2);
+  return xerrno(r);
+}
+// static int test_link_mprotect_p6_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_p6_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+// static void setup_link_mprotect_p6_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_p6_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p6_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p6_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p6_1_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p6_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p6_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_link_mprotect_p6_0_common
+// static void setup_link_mprotect_p6_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_p6_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p6_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p6_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p6_2_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p6_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+static void setup_link_mprotect_p6_2_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_link_mprotect_p6_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_p6_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p6_2_final(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+// static void setup_link_mprotect_p6_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p6_3_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p6_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p6_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_p6_2_common
+// static void setup_link_mprotect_p6_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_p6_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p6_3_final(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+// static void setup_link_mprotect_p6_3_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p4_0_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p4_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_p4_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_p6_2_common
+// static void setup_link_mprotect_p4_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p4_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p4_0_final(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+// static void setup_link_mprotect_p4_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p2_0_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p2_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p2_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_link_mprotect_p6_0_common
+// static void setup_link_mprotect_p2_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p2_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 0, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_0_proc0
+// static void setup_link_mprotect_p2_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p2_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p2_1_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p2_1_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p2_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_p6_2_common
+// static void setup_link_mprotect_p2_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p2_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 0, 0);
+// }
+// ^ See setup_link_mprotect_pf_5_proc0
+// static void setup_link_mprotect_p2_1_final(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+// static void setup_link_mprotect_p2_1_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p2_2_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p2_2_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p2_2_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_link_mprotect_p6_0_common
+// static void setup_link_mprotect_p2_2_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p2_2_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_file(0x12345600000, 1, "__i0", 0x0);
+// }
+// ^ See setup_link_mprotect_pf_3_proc0
+// static void setup_link_mprotect_p2_2_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_link_mprotect_pf_0_final
+// static void setup_link_mprotect_p2_2_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p2_3_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p2_3_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pf_0_1
+// static void setup_link_mprotect_p2_3_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_p6_2_common
+// static void setup_link_mprotect_p2_3_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p2_3_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   init_map_anon(0x12345600000, 1, 0);
+// }
+// ^ See setup_link_mprotect_pf_7_proc0
+// static void setup_link_mprotect_p2_3_final(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+// static void setup_link_mprotect_p2_3_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+/*
+ * calls: link mprotect
+ */
+// static int test_link_mprotect_p0_0_0(void) {
+//   int r = link("__f0", "__f0");
+//   expect_result("r", r, -1);
+//   expect_errno(2);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_p6_0_0
+// static int test_link_mprotect_p0_0_1(void) {
+//   int* va = (int*) 0x12345600000UL;
+//   int r = mprotect(va, 4096, PROT_READ);
+//   expect_result("r", r, -1);
+//   expect_errno(12);
+//   return xerrno(r);
+// }
+// ^ See test_link_mprotect_pe_0_1
+// static void setup_link_mprotect_p0_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_p6_2_common
+// static void setup_link_mprotect_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_link_mprotect_pf_0_proc1
+// static void setup_link_mprotect_p0_0_final(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+// static void setup_link_mprotect_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_link_mprotect_pf_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-link_mprotect_pf_0",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_1",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_2",
+    &setup_link_mprotect_pf_2_common,
+    { { &setup_link_mprotect_pf_2_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_2_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_3",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_3_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_4",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_4_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_5",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_5_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_6",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_6_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_7",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_7_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_8",
+    &setup_link_mprotect_pf_2_common,
+    { { &setup_link_mprotect_pf_8_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_2_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_9",
+    &setup_link_mprotect_pf_9_common,
+    { { &setup_link_mprotect_pf_4_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_10",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_5_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_11",
+    &setup_link_mprotect_pf_9_common,
+    { { &setup_link_mprotect_pf_6_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_12",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_3_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_13",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_7_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_14",
+    &setup_link_mprotect_pf_14_common,
+    { { &setup_link_mprotect_pf_4_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_15",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_16",
+    &setup_link_mprotect_pf_14_common,
+    { { &setup_link_mprotect_pf_6_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_17",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_3_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_18",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_5_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pf_19",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_7_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pe_0",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pe_1",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pe_2",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_0",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_1",
+    &setup_link_mprotect_pf_9_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_4_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_2",
+    &setup_link_mprotect_pd_2_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_2_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pd_2_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_3",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_4_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_4",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_5_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_5",
+    &setup_link_mprotect_pf_9_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_6_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_6",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_7_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_7",
+    &setup_link_mprotect_pf_14_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_4_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_8",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_9",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_3_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_10",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_5_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_11",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_7_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_12",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_6_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_13",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_3_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_14",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_15",
+    &setup_link_mprotect_pf_14_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_6_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_9_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_16",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_3_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_17",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_5_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_18",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_7_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pd_19",
+    &setup_link_mprotect_pd_2_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_8_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pd_2_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pc_0",
+    &setup_link_mprotect_pf_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pc_1",
+    &setup_link_mprotect_pf_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pf_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pc_2",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pf_14_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pb0_0",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pb0_0_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pb0_1",
+    &setup_link_mprotect_pb0_1_common,
+    { { &setup_link_mprotect_pb0_1_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pb0_2",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_5_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pb0_3",
+    &setup_link_mprotect_pb0_1_common,
+    { { &setup_link_mprotect_pb0_3_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pb0_4",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_7_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pb0_5",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pb0_5_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_pa0_0",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p90_0",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pb0_0_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p90_1",
+    &setup_link_mprotect_pb0_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pb0_1_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p90_2",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_5_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p90_3",
+    &setup_link_mprotect_pb0_1_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pb0_3_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_1_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p90_4",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_7_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p90_5",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pb0_5_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p80_0",
+    &setup_link_mprotect_pf_15_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_pb0_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p6_0",
+    &setup_link_mprotect_p6_0_common,
+    { { &setup_link_mprotect_pf_0_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p6_1",
+    &setup_link_mprotect_p6_0_common,
+    { { &setup_link_mprotect_pf_3_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p6_2",
+    &setup_link_mprotect_p6_2_common,
+    { { &setup_link_mprotect_pf_5_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_procfinal,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p6_3",
+    &setup_link_mprotect_p6_2_common,
+    { { &setup_link_mprotect_pf_7_proc0 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_procfinal,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p4_0",
+    &setup_link_mprotect_p6_2_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_procfinal,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 0, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p2_0",
+    &setup_link_mprotect_p6_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p2_1",
+    &setup_link_mprotect_p6_2_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_5_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_procfinal,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p2_2",
+    &setup_link_mprotect_p6_0_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_3_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_final,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p2_3",
+    &setup_link_mprotect_p6_2_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_7_proc0 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_procfinal,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pf_0_1, 1, "mprotect" } },
+    &cleanup },
+  { "fs-link_mprotect_p0_0",
+    &setup_link_mprotect_p6_2_common,
+    { { &setup_link_mprotect_pf_0_proc1 }, { &setup_link_mprotect_pf_0_proc1 } },
+    &setup_link_mprotect_pf_0_procfinal,
+    &setup_link_mprotect_pf_0_procfinal,
+    { { &test_link_mprotect_p6_0_0, 0, "link" },
+      { &test_link_mprotect_pe_0_1, 1, "mprotect" } },
+    &cleanup },
+//+++ common
+  {}
+};

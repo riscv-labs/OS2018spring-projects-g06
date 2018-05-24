@@ -1,0 +1,51 @@
+{
+  "tests": {
+    "pipe_pipe": {
+      "pe": {
+        "id": "pipe_pipe_pe", 
+        "diverge": "a/ba result"
+      }, 
+      "pc": {
+        "id": "pipe_pipe_pc", 
+        "diverge": "ab/b result"
+      }, 
+      "p8": {
+        "id": "pipe_pipe_p8", 
+        "diverge": "ab/b result"
+      }, 
+      "p7c": {
+        "id": "pipe_pipe_p7c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p78": {
+        "id": "pipe_pipe_p78", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pipe_pipe_p78_0", 
+            "assignments": {
+              "a.pipe.pid": "False", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p70": {
+        "id": "pipe_pipe_p70", 
+        "diverge": "a/ba result"
+      }, 
+      "p6": {
+        "id": "pipe_pipe_p6", 
+        "diverge": "a/ba result"
+      }, 
+      "p4": {
+        "id": "pipe_pipe_p4", 
+        "diverge": "ab/b result"
+      }, 
+      "p0": {
+        "id": "pipe_pipe_p0", 
+        "diverge": "ab/b result"
+      }
+    }
+  }
+}

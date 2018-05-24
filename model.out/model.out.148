@@ -1,0 +1,460 @@
+{
+  "tests": {
+    "mprotect_rename": {
+      "pe": {
+        "id": "mprotect_rename_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_pe_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pe_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pe_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pe_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pe_4", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pe_5", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "mprotect_rename_pd8", 
+        "diverge": "ab/ba state"
+      }, 
+      "pd0": {
+        "id": "mprotect_rename_pd0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_pd0_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_4", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_5", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_6", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_7", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_8", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_9", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_10", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_11", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_12", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pd0_13", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "mprotect_rename_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_pc_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pc_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pc_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pc_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pc_4", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_pc_5", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "mprotect_rename_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_p8_0", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_p8_1", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "False", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_p8_2", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_p8_3", 
+            "assignments": {
+              "Fs.proc0.va_map._map.anon[a.mprotect.va]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "True", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._map.writable[a.mprotect.va]": "True", 
+              "a.mprotect.pid": "False", 
+              "Fs.root_dir._valid[b.rename.src]": "False"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "mprotect_rename_p6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_p6_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "p58": {
+        "id": "mprotect_rename_p58", 
+        "diverge": "ab/ba state"
+      }, 
+      "p50": {
+        "id": "mprotect_rename_p50", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_p50_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "False"
+            }
+          }, 
+          {
+            "id": "mprotect_rename_p50_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "mprotect_rename_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_p4_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "mprotect_rename_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_rename_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False", 
+              "Fs.proc0.va_map._valid[a.mprotect.va]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

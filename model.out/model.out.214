@@ -1,0 +1,28 @@
+{
+  "tests": {
+    "reboot_unlink": {
+      "pc": {
+        "id": "reboot_unlink_pc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "reboot_unlink_p8", 
+        "diverge": "ab/b result"
+      }, 
+      "p4": {
+        "id": "reboot_unlink_p4", 
+        "diverge": "ab/b result"
+      }, 
+      "p0": {
+        "id": "reboot_unlink_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "reboot_unlink_p0_0", 
+            "assignments": {}
+          }
+        ]
+      }
+    }
+  }
+}

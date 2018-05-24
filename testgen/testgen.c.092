@@ -1,0 +1,900 @@
+//+++ common
+#define _GNU_SOURCE 1
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "fstest.h"
+
+__attribute__((__unused__)) static void
+init_map_anon(uintptr_t va, bool writable, char value)
+{
+  char *r = mmap((void*)va, 4096, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+  if (r == MAP_FAILED) setup_error("mmap");
+  *r = value;
+  if (!writable) {
+    int r2 = mprotect(r, 4096, PROT_READ);
+    if (r2 < 0) setup_error("mprotect");
+  }
+  // Ensure test cores don't shoot down the setup core
+  xinvalidate(r, 4096);
+}
+
+__attribute__((__unused__)) static void
+init_map_file(uintptr_t va, bool writable, const char *fname, off_t offset)
+{
+  int fd = open(fname, O_RDWR);
+  if (fd < 0) setup_error("open");
+  void *r = mmap((void*)va, 4096, PROT_READ | (writable ? PROT_WRITE : 0),
+                 MAP_SHARED | MAP_FIXED, fd, offset);
+  if (r == MAP_FAILED) setup_error("mmap");
+  close(fd);
+}
+
+__attribute__((__weak__)) const char dataval0[4096] = {0};
+__attribute__((__weak__)) const char dataval1[4096] = {1};
+__attribute__((__weak__)) const char dataval2[4096] = {2};
+__attribute__((__weak__)) const char dataval3[4096] = {3};
+__attribute__((__weak__)) const char dataval4[4096] = {4};
+__attribute__((__weak__)) const char dataval5[4096] = {5};
+__attribute__((__weak__)) const char dataval6[4096] = {6};
+__attribute__((__weak__)) const char dataval7[4096] = {7};
+__attribute__((__weak__)) const char dataval8[4096] = {8};
+__attribute__((__weak__)) const char dataval9[4096] = {9};
+__attribute__((__weak__)) const char dataval10[4096] = {10};
+__attribute__((__weak__)) const char dataval11[4096] = {11};
+__attribute__((__weak__)) const char dataval12[4096] = {12};
+__attribute__((__weak__)) const char dataval13[4096] = {13};
+__attribute__((__weak__)) const char dataval14[4096] = {14};
+__attribute__((__weak__)) const char dataval15[4096] = {15};
+__attribute__((__weak__)) char datavalbuf[4096];
+
+//+++ tests
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_pc_0_0(void) {
+  int r = lseek(10, 0, 999);
+  expect_result("r", r, -1);
+  expect_errno(22);
+  return xerrno(r);
+}
+static int test_lseek_sync_pc_0_1(void) {
+  sync();return 0;
+}
+static void setup_lseek_sync_pc_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+  r = pipe2(fds, O_NONBLOCK);
+  if (r != 0) setup_error("pipe => %d", r);
+  r = dup2(fds[0], 20);
+  if (r != 20) setup_error("dup2");
+  r = dup2(fds[1], 21);
+  if (r != 21) setup_error("dup2");
+  close(fds[0]);
+  close(fds[1]);
+}
+static void setup_lseek_sync_pc_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(20, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_lseek_sync_pc_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+static void setup_lseek_sync_pc_0_final(void) {
+  unlink("__i0");
+  close(20);
+  close(21);
+}
+static void setup_lseek_sync_pc_0_procfinal(void) {
+  close(20);
+  close(21);
+}
+
+/*
+ * calls: lseek sync
+ */
+// static int test_lseek_sync_pc_1_0(void) {
+//   int r = lseek(10, 0, 999);
+//   expect_result("r", r, -1);
+//   expect_errno(22);
+//   return xerrno(r);
+// }
+// ^ See test_lseek_sync_pc_0_0
+// static int test_lseek_sync_pc_1_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+// static void setup_lseek_sync_pc_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+//   r = pipe2(fds, O_NONBLOCK);
+//   if (r != 0) setup_error("pipe => %d", r);
+//   r = dup2(fds[0], 20);
+//   if (r != 20) setup_error("dup2");
+//   r = dup2(fds[1], 21);
+//   if (r != 21) setup_error("dup2");
+//   close(fds[0]);
+//   close(fds[1]);
+// }
+// ^ See setup_lseek_sync_pc_0_common
+static void setup_lseek_sync_pc_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  r = dup2(21, 10);
+  if (r < 0) setup_error("dup2");
+  r = dup(20);
+  if (r < 0) setup_error("dup");
+  r = dup(21);
+  if (r < 0) setup_error("dup");
+}
+// static void setup_lseek_sync_pc_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   r = dup(20);
+//   if (r < 0) setup_error("dup");
+//   r = dup(21);
+//   if (r < 0) setup_error("dup");
+// }
+// ^ See setup_lseek_sync_pc_0_proc1
+// static void setup_lseek_sync_pc_1_final(void) {
+//   unlink("__i0");
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_lseek_sync_pc_0_final
+// static void setup_lseek_sync_pc_1_procfinal(void) {
+//   close(20);
+//   close(21);
+// }
+// ^ See setup_lseek_sync_pc_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_pb_0_0(void) {
+  int r = lseek(10, -4096, SEEK_SET);
+  expect_result("r", r, -1);
+  expect_errno(22);
+  return xerrno(r);
+}
+// static int test_lseek_sync_pb_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+static void setup_lseek_sync_pb_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+static void setup_lseek_sync_pb_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 7356416, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+static void setup_lseek_sync_pb_0_proc1(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+}
+static void setup_lseek_sync_pb_0_final(void) {
+  unlink("__i0");
+}
+static void setup_lseek_sync_pb_0_procfinal(void) {
+  
+}
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_pa_0_0(void) {
+  int r = lseek(10, 0, SEEK_SET);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static int test_lseek_sync_pa_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+static void setup_lseek_sync_pa_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  close(fd);
+}
+static void setup_lseek_sync_pa_0_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 0, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_lseek_sync_pa_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_pa_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_pa_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_pa_1_0(void) {
+  int r = lseek(10, 4096, SEEK_SET);
+  expect_result("r", r, 4096);
+  return xerrno(r);
+}
+// static int test_lseek_sync_pa_1_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+static void setup_lseek_sync_pa_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+// static void setup_lseek_sync_pa_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_proc0
+// static void setup_lseek_sync_pa_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_pa_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_pa_1_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_p98_0_0(void) {
+  int r = lseek(10, -4096, SEEK_CUR);
+  expect_result("r", r, -1);
+  expect_errno(22);
+  return xerrno(r);
+}
+// static int test_lseek_sync_p98_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+static void setup_lseek_sync_p98_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+// static void setup_lseek_sync_p98_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_proc0
+// static void setup_lseek_sync_p98_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p98_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p98_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_p90_0_0(void) {
+  int r = lseek(10, 0, SEEK_CUR);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static int test_lseek_sync_p90_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+// static void setup_lseek_sync_p90_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_common
+// static void setup_lseek_sync_p90_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_proc0
+// static void setup_lseek_sync_p90_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p90_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p90_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_p90_1_0(void) {
+  int r = lseek(10, 4096, SEEK_CUR);
+  expect_result("r", r, 4096);
+  return xerrno(r);
+}
+// static int test_lseek_sync_p90_1_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+static void setup_lseek_sync_p90_1_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+  fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+  if (fd < 0) setup_error("open");
+  write(fd, "x", 1);
+  close(fd);
+  fd = open("__i0", O_TRUNC | O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  r = write(fd, dataval0, 4096);
+  if (r != 4096) setup_error("write => %d", r);
+  close(fd);
+}
+// static void setup_lseek_sync_p90_1_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_proc0
+// static void setup_lseek_sync_p90_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p90_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p90_1_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_p8c_0_0(void) {
+  int r = lseek(10, -4096, SEEK_END);
+  expect_result("r", r, -1);
+  expect_errno(22);
+  return xerrno(r);
+}
+// static int test_lseek_sync_p8c_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+// static void setup_lseek_sync_p8c_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_common
+// static void setup_lseek_sync_p8c_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 7356416, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pb_0_proc0
+// static void setup_lseek_sync_p8c_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p8c_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p8c_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_p88_0_0(void) {
+  int r = lseek(10, 0, SEEK_END);
+  expect_result("r", r, 0);
+  return xerrno(r);
+}
+// static int test_lseek_sync_p88_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+// static void setup_lseek_sync_p88_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_common
+// static void setup_lseek_sync_p88_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_proc0
+// static void setup_lseek_sync_p88_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p88_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p88_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+// static int test_lseek_sync_p88_1_0(void) {
+//   int r = lseek(10, 0, SEEK_END);
+//   expect_result("r", r, 0);
+//   return xerrno(r);
+// }
+// ^ See test_lseek_sync_p88_0_0
+// static int test_lseek_sync_p88_1_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+// static void setup_lseek_sync_p88_1_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_common
+static void setup_lseek_sync_p88_1_proc0(void) {
+  int fd __attribute__((unused));
+  int r __attribute__((unused));
+  fd = open("__i0", O_RDWR);
+  if (fd < 0) setup_error("open");
+  r = lseek(fd, 4096, SEEK_SET);
+  if (fd >= 0 && r < 0) setup_error("lseek");
+  r = dup2(fd, 10);
+  if (fd >= 0 && r < 0) setup_error("dup2");
+  close(fd);
+}
+// static void setup_lseek_sync_p88_1_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p88_1_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p88_1_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+// static int test_lseek_sync_p80_0_0(void) {
+//   int r = lseek(10, 0, 999);
+//   expect_result("r", r, -1);
+//   expect_errno(22);
+//   return xerrno(r);
+// }
+// ^ See test_lseek_sync_pc_0_0
+// static int test_lseek_sync_p80_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+// static void setup_lseek_sync_p80_0_common(void) {
+//   int fd __attribute__((unused));
+//   int fds[2] __attribute__((unused));
+//   int r __attribute__((unused));
+//   char c __attribute__((unused));
+//   fd = open("__i0", O_CREAT | O_TRUNC | O_RDWR, 0666);
+//   if (fd < 0) setup_error("open");
+//   write(fd, "x", 1);
+//   close(fd);
+//   fd = open("__i0", O_TRUNC | O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_common
+// static void setup_lseek_sync_p80_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+//   fd = open("__i0", O_RDWR);
+//   if (fd < 0) setup_error("open");
+//   r = lseek(fd, 0, SEEK_SET);
+//   if (fd >= 0 && r < 0) setup_error("lseek");
+//   r = dup2(fd, 10);
+//   if (fd >= 0 && r < 0) setup_error("dup2");
+//   close(fd);
+// }
+// ^ See setup_lseek_sync_pa_0_proc0
+// static void setup_lseek_sync_p80_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p80_0_final(void) {
+//   unlink("__i0");
+// }
+// ^ See setup_lseek_sync_pb_0_final
+// static void setup_lseek_sync_p80_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+/*
+ * calls: lseek sync
+ */
+static int test_lseek_sync_p0_0_0(void) {
+  int r = lseek(10, 0, 999);
+  expect_result("r", r, -1);
+  expect_errno(9);
+  return xerrno(r);
+}
+// static int test_lseek_sync_p0_0_1(void) {
+//   sync();return 0;
+// }
+// ^ See test_lseek_sync_pc_0_1
+static void setup_lseek_sync_p0_0_common(void) {
+  int fd __attribute__((unused));
+  int fds[2] __attribute__((unused));
+  int r __attribute__((unused));
+  char c __attribute__((unused));
+}
+// static void setup_lseek_sync_p0_0_proc0(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p0_0_proc1(void) {
+//   int fd __attribute__((unused));
+//   int r __attribute__((unused));
+// }
+// ^ See setup_lseek_sync_pb_0_proc1
+// static void setup_lseek_sync_p0_0_final(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+// static void setup_lseek_sync_p0_0_procfinal(void) {
+//   
+// }
+// ^ See setup_lseek_sync_pb_0_procfinal
+
+//+++ common
+static void cleanup(void) {
+  unlink("__f0");
+  unlink("__f1");
+  unlink("__f2");
+  unlink("__f3");
+  unlink("__f4");
+  unlink("__f5");
+}
+
+struct fstest fstests[] = {
+//+++ tests
+  { "fs-lseek_sync_pc_0",
+    &setup_lseek_sync_pc_0_common,
+    { { &setup_lseek_sync_pc_0_proc0 }, { &setup_lseek_sync_pc_0_proc1 } },
+    &setup_lseek_sync_pc_0_procfinal,
+    &setup_lseek_sync_pc_0_final,
+    { { &test_lseek_sync_pc_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_pc_1",
+    &setup_lseek_sync_pc_0_common,
+    { { &setup_lseek_sync_pc_1_proc0 }, { &setup_lseek_sync_pc_0_proc1 } },
+    &setup_lseek_sync_pc_0_procfinal,
+    &setup_lseek_sync_pc_0_final,
+    { { &test_lseek_sync_pc_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_pb_0",
+    &setup_lseek_sync_pb_0_common,
+    { { &setup_lseek_sync_pb_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_pb_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_pa_0",
+    &setup_lseek_sync_pa_0_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_pa_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_pa_1",
+    &setup_lseek_sync_pa_1_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_pa_1_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p98_0",
+    &setup_lseek_sync_p98_0_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_p98_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p90_0",
+    &setup_lseek_sync_pa_0_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_p90_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p90_1",
+    &setup_lseek_sync_p90_1_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_p90_1_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p8c_0",
+    &setup_lseek_sync_pa_0_common,
+    { { &setup_lseek_sync_pb_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_p8c_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p88_0",
+    &setup_lseek_sync_pa_0_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_p88_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p88_1",
+    &setup_lseek_sync_pa_0_common,
+    { { &setup_lseek_sync_p88_1_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_p88_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p80_0",
+    &setup_lseek_sync_pa_0_common,
+    { { &setup_lseek_sync_pa_0_proc0 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_final,
+    { { &test_lseek_sync_pc_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+  { "fs-lseek_sync_p0_0",
+    &setup_lseek_sync_p0_0_common,
+    { { &setup_lseek_sync_pb_0_proc1 }, { &setup_lseek_sync_pb_0_proc1 } },
+    &setup_lseek_sync_pb_0_procfinal,
+    &setup_lseek_sync_pb_0_procfinal,
+    { { &test_lseek_sync_p0_0_0, 0, "lseek" },
+      { &test_lseek_sync_pc_0_1, 0, "sync" } },
+    &cleanup },
+//+++ common
+  {}
+};

@@ -1,0 +1,630 @@
+{
+  "tests": {
+    "lseek_pipe": {
+      "pfc": {
+        "id": "lseek_pipe_pfc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf8": {
+        "id": "lseek_pipe_pf8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_pf8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_pf8_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pf0": {
+        "id": "lseek_pipe_pf0", 
+        "diverge": "ab/b result"
+      }, 
+      "pe": {
+        "id": "lseek_pipe_pe", 
+        "diverge": "ab/b result"
+      }, 
+      "pdc": {
+        "id": "lseek_pipe_pdc", 
+        "diverge": "ab/ba state"
+      }, 
+      "pd8": {
+        "id": "lseek_pipe_pd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_pd8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_pd8_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "True", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.lseek.fd]": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pd0": {
+        "id": "lseek_pipe_pd0", 
+        "diverge": "ab/b result"
+      }, 
+      "pc": {
+        "id": "lseek_pipe_pc", 
+        "diverge": "ab/b result"
+      }, 
+      "pbf": {
+        "id": "lseek_pipe_pbf", 
+        "diverge": "ab/ba state"
+      }, 
+      "pbe": {
+        "id": "lseek_pipe_pbe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_pbe_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pbc": {
+        "id": "lseek_pipe_pbc", 
+        "diverge": "ab/b result"
+      }, 
+      "pb8": {
+        "id": "lseek_pipe_pb8", 
+        "diverge": "ab/b result"
+      }, 
+      "pb7": {
+        "id": "lseek_pipe_pb7", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb6": {
+        "id": "lseek_pipe_pb6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_pb6_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pb4": {
+        "id": "lseek_pipe_pb4", 
+        "diverge": "ab/b result"
+      }, 
+      "pb0": {
+        "id": "lseek_pipe_pb0", 
+        "diverge": "ab/b result"
+      }, 
+      "paf": {
+        "id": "lseek_pipe_paf", 
+        "diverge": "ab/ba state"
+      }, 
+      "pae": {
+        "id": "lseek_pipe_pae", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_pae_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_pae_1", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "b.pipe.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pac": {
+        "id": "lseek_pipe_pac", 
+        "diverge": "ab/b result"
+      }, 
+      "pa8": {
+        "id": "lseek_pipe_pa8", 
+        "diverge": "ab/b result"
+      }, 
+      "pa7": {
+        "id": "lseek_pipe_pa7", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa6": {
+        "id": "lseek_pipe_pa6", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_pa6_0", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_pa6_1", 
+            "assignments": {
+              "a.lseek.whence_set": "True", 
+              "a.lseek.pid": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "b.pipe.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pa4": {
+        "id": "lseek_pipe_pa4", 
+        "diverge": "ab/b result"
+      }, 
+      "pa0": {
+        "id": "lseek_pipe_pa0", 
+        "diverge": "ab/b result"
+      }, 
+      "p9f8": {
+        "id": "lseek_pipe_p9f8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9f0": {
+        "id": "lseek_pipe_p9f0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p9f0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.pipe.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9e": {
+        "id": "lseek_pipe_p9e", 
+        "diverge": "ab/b result"
+      }, 
+      "p9c": {
+        "id": "lseek_pipe_p9c", 
+        "diverge": "ab/b result"
+      }, 
+      "p9b8": {
+        "id": "lseek_pipe_p9b8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9b0": {
+        "id": "lseek_pipe_p9b0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p9b0_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.pipe.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9a": {
+        "id": "lseek_pipe_p9a", 
+        "diverge": "ab/b result"
+      }, 
+      "p98": {
+        "id": "lseek_pipe_p98", 
+        "diverge": "ab/b result"
+      }, 
+      "p978": {
+        "id": "lseek_pipe_p978", 
+        "diverge": "ab/ba state"
+      }, 
+      "p970": {
+        "id": "lseek_pipe_p970", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p970_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.pipe.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_p970_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.pipe.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p96": {
+        "id": "lseek_pipe_p96", 
+        "diverge": "ab/b result"
+      }, 
+      "p94": {
+        "id": "lseek_pipe_p94", 
+        "diverge": "ab/b result"
+      }, 
+      "p938": {
+        "id": "lseek_pipe_p938", 
+        "diverge": "ab/ba state"
+      }, 
+      "p930": {
+        "id": "lseek_pipe_p930", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p930_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.pipe.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_p930_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "True", 
+              "b.pipe.pid": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p92": {
+        "id": "lseek_pipe_p92", 
+        "diverge": "ab/b result"
+      }, 
+      "p90": {
+        "id": "lseek_pipe_p90", 
+        "diverge": "ab/b result"
+      }, 
+      "p8fc": {
+        "id": "lseek_pipe_p8fc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8f8": {
+        "id": "lseek_pipe_p8f8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p8f8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8f0": {
+        "id": "lseek_pipe_p8f0", 
+        "diverge": "ab/b result"
+      }, 
+      "p8e": {
+        "id": "lseek_pipe_p8e", 
+        "diverge": "ab/b result"
+      }, 
+      "p8dc": {
+        "id": "lseek_pipe_p8dc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8d8": {
+        "id": "lseek_pipe_p8d8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p8d8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8d0": {
+        "id": "lseek_pipe_p8d0", 
+        "diverge": "ab/b result"
+      }, 
+      "p8c": {
+        "id": "lseek_pipe_p8c", 
+        "diverge": "ab/b result"
+      }, 
+      "p8bc": {
+        "id": "lseek_pipe_p8bc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8b8": {
+        "id": "lseek_pipe_p8b8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p8b8_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_p8b8_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8b0": {
+        "id": "lseek_pipe_p8b0", 
+        "diverge": "ab/b result"
+      }, 
+      "p8a": {
+        "id": "lseek_pipe_p8a", 
+        "diverge": "ab/b result"
+      }, 
+      "p89c": {
+        "id": "lseek_pipe_p89c", 
+        "diverge": "ab/ba state"
+      }, 
+      "p898": {
+        "id": "lseek_pipe_p898", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p898_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }, 
+          {
+            "id": "lseek_pipe_p898_1", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "a.lseek.whence_end": "True", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p890": {
+        "id": "lseek_pipe_p890", 
+        "diverge": "ab/b result"
+      }, 
+      "p88": {
+        "id": "lseek_pipe_p88", 
+        "diverge": "ab/b result"
+      }, 
+      "p878": {
+        "id": "lseek_pipe_p878", 
+        "diverge": "ab/ba state"
+      }, 
+      "p870": {
+        "id": "lseek_pipe_p870", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p870_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p86": {
+        "id": "lseek_pipe_p86", 
+        "diverge": "ab/b result"
+      }, 
+      "p84": {
+        "id": "lseek_pipe_p84", 
+        "diverge": "ab/b result"
+      }, 
+      "p838": {
+        "id": "lseek_pipe_p838", 
+        "diverge": "ab/ba state"
+      }, 
+      "p830": {
+        "id": "lseek_pipe_p830", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p830_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.lseek.fd]": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "True", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p82": {
+        "id": "lseek_pipe_p82", 
+        "diverge": "ab/b result"
+      }, 
+      "p80": {
+        "id": "lseek_pipe_p80", 
+        "diverge": "ab/b result"
+      }, 
+      "p78": {
+        "id": "lseek_pipe_p78", 
+        "diverge": "a/ba result"
+      }, 
+      "p74": {
+        "id": "lseek_pipe_p74", 
+        "diverge": "ab/ba state"
+      }, 
+      "p70": {
+        "id": "lseek_pipe_p70", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p70_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "False", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p6": {
+        "id": "lseek_pipe_p6", 
+        "diverge": "ab/b result"
+      }, 
+      "p4": {
+        "id": "lseek_pipe_p4", 
+        "diverge": "ab/b result"
+      }, 
+      "p38": {
+        "id": "lseek_pipe_p38", 
+        "diverge": "ab/ba state"
+      }, 
+      "p30": {
+        "id": "lseek_pipe_p30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "lseek_pipe_p30_0", 
+            "assignments": {
+              "a.lseek.whence_set": "False", 
+              "a.lseek.whence_cur": "False", 
+              "b.pipe.pid": "True", 
+              "a.lseek.whence_end": "False", 
+              "Fs.proc0.fd_map._valid[a.lseek.fd]": "False", 
+              "a.lseek.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p2": {
+        "id": "lseek_pipe_p2", 
+        "diverge": "ab/b result"
+      }, 
+      "p0": {
+        "id": "lseek_pipe_p0", 
+        "diverge": "ab/b result"
+      }
+    }
+  }
+}

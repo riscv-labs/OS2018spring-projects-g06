@@ -1,0 +1,91 @@
+{
+  "tests": {
+    "pread_sync": {
+      "pc": {
+        "id": "pread_sync_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_sync_pc_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True"
+            }
+          }, 
+          {
+            "id": "pread_sync_pc_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True"
+            }
+          }
+        ]
+      }, 
+      "pa": {
+        "id": "pread_sync_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_sync_pa_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pread_sync_pa_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p9": {
+        "id": "pread_sync_p9", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "pread_sync_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_sync_p8_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False"
+            }
+          }, 
+          {
+            "id": "pread_sync_p8_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "pread_sync_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_sync_p0_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,3062 @@
+{
+  "tests": {
+    "pread_read": {
+      "pfc": {
+        "id": "pread_read_pfc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pfc_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_6", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfc_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pfb": {
+        "id": "pread_read_pfb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pfb_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_5", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfb_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pfa": {
+        "id": "pread_read_pfa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pfa_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfa_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfa_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfa_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfa_4", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfa_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pfa_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pf8": {
+        "id": "pread_read_pf8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pf8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_7", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf8_8", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pf4": {
+        "id": "pread_read_pf4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pf4_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf4_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf4_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf4_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pf2": {
+        "id": "pread_read_pf2", 
+        "diverge": "ab/ba state"
+      }, 
+      "pf0": {
+        "id": "pread_read_pf0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pf0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pf0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pe": {
+        "id": "pread_read_pe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pe_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pe_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pdc": {
+        "id": "pread_read_pdc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pdc_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_5", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_6", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdc_7", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pdb": {
+        "id": "pread_read_pdb", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pdb_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_5", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_6", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pdb_7", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pda": {
+        "id": "pread_read_pda", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pda_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pda_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pda_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pda_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pda_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pda_5", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pd8": {
+        "id": "pread_read_pd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pd8_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_5", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_6", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd8_7", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pd4": {
+        "id": "pread_read_pd4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pd4_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd4_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd4_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd4_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pd2": {
+        "id": "pread_read_pd2", 
+        "diverge": "ab/ba state"
+      }, 
+      "pd0": {
+        "id": "pread_read_pd0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pd0_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd0_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd0_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pd0_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pc": {
+        "id": "pread_read_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pc_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pc_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.pipewriter[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pbe": {
+        "id": "pread_read_pbe", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pbe_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbe_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbe_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbe_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pbd8": {
+        "id": "pread_read_pbd8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pbd8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbd8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbd8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbd8_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pbd0": {
+        "id": "pread_read_pbd0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pbd0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbd0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbd0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbd0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pbc": {
+        "id": "pread_read_pbc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pbc_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbc_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbc_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pbc_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pba": {
+        "id": "pread_read_pba", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pba_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_6", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_7", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pba_8", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb9": {
+        "id": "pread_read_pb9", 
+        "diverge": "ab/ba state"
+      }, 
+      "pb8": {
+        "id": "pread_read_pb8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pb8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pb8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pb8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pb8_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pb8_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pb8_5", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb0": {
+        "id": "pread_read_pb0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pb0_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_pb0_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pae": {
+        "id": "pread_read_pae", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pae_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pae_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pae_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pae_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pad8": {
+        "id": "pread_read_pad8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pad8_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pad8_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pad8_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pad8_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pad0": {
+        "id": "pread_read_pad0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pad0_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pad0_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pad0_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pad0_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pac": {
+        "id": "pread_read_pac", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pac_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pac_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pac_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pac_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "paa": {
+        "id": "pread_read_paa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_paa_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_paa_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_paa_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_paa_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_paa_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_paa_5", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_paa_6", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pa9": {
+        "id": "pread_read_pa9", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa8": {
+        "id": "pread_read_pa8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pa8_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pa8_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pa8_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pa8_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pa8_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "pa0": {
+        "id": "pread_read_pa0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_pa0_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_pa0_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p9f": {
+        "id": "pread_read_p9f", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9e": {
+        "id": "pread_read_p9e", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p9e_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9e_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9e_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9e_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9dc": {
+        "id": "pread_read_p9dc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9d8": {
+        "id": "pread_read_p9d8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p9d8_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9d8_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9d8_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9d8_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9d4": {
+        "id": "pread_read_p9d4", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9d0": {
+        "id": "pread_read_p9d0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p9d0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9d0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9d0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9d0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9c8": {
+        "id": "pread_read_p9c8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9c0": {
+        "id": "pread_read_p9c0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p9c0_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9c0_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9c0_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9c0_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p9b": {
+        "id": "pread_read_p9b", 
+        "diverge": "ab/ba state"
+      }, 
+      "p9a": {
+        "id": "pread_read_p9a", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p9a_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9a_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9a_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9a_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9a_4", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p9a_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p99": {
+        "id": "pread_read_p99", 
+        "diverge": "ab/ba state"
+      }, 
+      "p98": {
+        "id": "pread_read_p98", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p98_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_1", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_2", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_3", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_4", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_5", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_6", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_7", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p98_8", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p94": {
+        "id": "pread_read_p94", 
+        "diverge": "ab/ba state"
+      }, 
+      "p90": {
+        "id": "pread_read_p90", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p90_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p90_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p8f": {
+        "id": "pread_read_p8f", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8e": {
+        "id": "pread_read_p8e", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p8e_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8e_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8e_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8e_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p8dc": {
+        "id": "pread_read_p8dc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8d8": {
+        "id": "pread_read_p8d8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p8d8_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8d8_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8d8_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8d8_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p8d4": {
+        "id": "pread_read_p8d4", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8d0": {
+        "id": "pread_read_p8d0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p8d0_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8d0_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8d0_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8d0_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p8c8": {
+        "id": "pread_read_p8c8", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8c0": {
+        "id": "pread_read_p8c0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p8c0_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8c0_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8c0_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8c0_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p8b": {
+        "id": "pread_read_p8b", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8a": {
+        "id": "pread_read_p8a", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p8a_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8a_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8a_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8a_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p8a_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p89": {
+        "id": "pread_read_p89", 
+        "diverge": "ab/ba state"
+      }, 
+      "p88": {
+        "id": "pread_read_p88", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p88_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p88_1", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p88_2", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p88_3", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p88_4", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p88_5", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p88_6", 
+            "assignments": {
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p84": {
+        "id": "pread_read_p84", 
+        "diverge": "ab/ba state"
+      }, 
+      "p80": {
+        "id": "pread_read_p80", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p80_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }, 
+          {
+            "id": "pread_read_p80_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[a.pread.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p78": {
+        "id": "pread_read_p78", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p78_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p76": {
+        "id": "pread_read_p76", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p76_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p74": {
+        "id": "pread_read_p74", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p74_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p70": {
+        "id": "pread_read_p70", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p70_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc0.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p68": {
+        "id": "pread_read_p68", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p68_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p64": {
+        "id": "pread_read_p64", 
+        "diverge": "ab/ba state"
+      }, 
+      "p60": {
+        "id": "pread_read_p60", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p60_0", 
+            "assignments": {
+              "Fs.proc0.fd_map._map.ispipe[b.read.fd]": "False", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "True", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p4": {
+        "id": "pread_read_p4", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p4_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc0.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }, 
+          {
+            "id": "pread_read_p4_1", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "b.read.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p38": {
+        "id": "pread_read_p38", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p38_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p36": {
+        "id": "pread_read_p36", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p36_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p34": {
+        "id": "pread_read_p34", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p34_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p30": {
+        "id": "pread_read_p30", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p30_0", 
+            "assignments": {
+              "Fs.proc1.fd_map._map.pipewriter[b.read.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "True", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p28": {
+        "id": "pread_read_p28", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p28_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p24": {
+        "id": "pread_read_p24", 
+        "diverge": "ab/ba state"
+      }, 
+      "p20": {
+        "id": "pread_read_p20", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p20_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "True", 
+              "Fs.proc1.fd_map._map.ispipe[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "pread_read_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "pread_read_p0_0", 
+            "assignments": {
+              "a.pread.pid": "False", 
+              "Fs.proc0.fd_map._valid[a.pread.fd]": "False", 
+              "Fs.proc1.fd_map._valid[b.read.fd]": "False", 
+              "b.read.pid": "True"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "tests": {
+    "fsync_reboot": {
+      "pc": {
+        "id": "fsync_reboot_pc", 
+        "diverge": "ab/ba state"
+      }, 
+      "p8": {
+        "id": "fsync_reboot_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fsync_reboot_p8_0", 
+            "assignments": {
+              "a.fsync.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "fsync_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "fsync_reboot_p0_0", 
+            "assignments": {
+              "a.fsync.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

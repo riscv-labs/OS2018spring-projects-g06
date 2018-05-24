@@ -1,0 +1,77 @@
+{
+  "tests": {
+    "munmap_rename": {
+      "pc": {
+        "id": "munmap_rename_pc", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_rename_pc_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False"
+            }
+          }
+        ]
+      }, 
+      "pb": {
+        "id": "munmap_rename_pb", 
+        "diverge": "ab/ba state"
+      }, 
+      "pa": {
+        "id": "munmap_rename_pa", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_rename_pa_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }, 
+          {
+            "id": "munmap_rename_pa_1", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "True"
+            }
+          }
+        ]
+      }, 
+      "p8": {
+        "id": "munmap_rename_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_rename_p8_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "True", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False", 
+              "Fs.root_dir._valid[b.rename.dst]": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "munmap_rename_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "munmap_rename_p0_0", 
+            "assignments": {
+              "Fs.root_dir._valid[b.rename.src]": "False", 
+              "Fs.proc0.va_map._valid[a.munmap.va]": "False", 
+              "a.munmap.pid": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

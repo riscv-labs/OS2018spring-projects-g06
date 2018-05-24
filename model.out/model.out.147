@@ -1,0 +1,32 @@
+{
+  "tests": {
+    "mprotect_reboot": {
+      "p8": {
+        "id": "mprotect_reboot_p8", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_reboot_p8_0", 
+            "assignments": {
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False"
+            }
+          }
+        ]
+      }, 
+      "p0": {
+        "id": "mprotect_reboot_p0", 
+        "diverge": "", 
+        "tests": [
+          {
+            "id": "mprotect_reboot_p0_0", 
+            "assignments": {
+              "a.mprotect.pid": "False", 
+              "a.mprotect.writable": "False"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
