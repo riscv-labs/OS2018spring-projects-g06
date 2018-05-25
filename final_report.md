@@ -189,7 +189,6 @@ Commuter的提出可以帮助我们分析和设计系统调用的行为描述，
 
 总的来说，Commuter的核心设计分成了三个部分Analyzer、TestGen、MTrace，其中Analyzer负责分析系统调用序列是否满足SIM条件，针对系统调用序列中满足条件的path condition，传递给TestGen；TestGen针对这些path condition实例化测试代码`TestGen.c`；MTrace运行在CPU的修改版本，额外记录了操作系统访问物理内存的信息，MTrace通过分析是否有缓冲行的访问冲突来判断实际os的系统调用之间的并行性。原文中也提到充分理解Commuter是一件极其困难的事情，因为它涉及了许多的知识，例如符号化执行，z3求解。此外，更加令人头疼的是，限于篇幅，许多概念和细节，作者并没有真正阐释清楚，例如5.2 TESTGEN章节关于assignments同构这一概念和对于conflict coverage代码的实现。以下，我们将从Commuter的这三个部分分别展开详细论述他们的设计与实现，方便后人继续深入研究Commuter工具。
 
-
 ##### Analyzer
 
 本小节根据[2]中的文献5. Analyzing interfaces using COMMUTER和5.1 ANALYZER章节整理得到。
@@ -247,7 +246,7 @@ simtest.py的test_callset函数，这个函数利用符号化执行的方式调�
 
 关于assignment同构的概念，我们通过一个例子来阐述：
 
-| 表达式 | x=1, y=1 | x=2, y=2 | x=1, y=3 |
+| 表达式    | x=1, y=1 | x=2, y=2 | x=1, y=3 |
 | :----- | :------- | :------- | :------- |
 | x - y  | 0        | 0        | -2       |
 | x + y  | 2        | 4        | 4        |
@@ -266,7 +265,7 @@ simtest.py的test_callset函数，这个函数利用符号化执行的方式调�
 
 $$ \forall i \not= j \in \{1, 2, ..., n\} $$
 
-$$ E_i(a_1, a_2, ..., a_m) = E_j(a_1, a_2, ..., a_m) \iff E_i(b_1, b_2, ..., b_m) = E_j(b_1, b_2, ..., b_m)$$
+$$ E_i(a_1, a_2, ..., a_m) = E_j(a_1, a_2, ..., a_m) \iff E_i(b_1, b_2, ..., b_m) = E_j(b_1, b_2, ..., b_m) $$
 
 我们先只叙述TestGen的实现方法，而方法的正确性在后续给出。为了实现conflict coverage，我们需要针对一条path取多组参数赋值，以遍历所有的访问模式，为此，我们需要这些参数赋值两两不同构。
 
