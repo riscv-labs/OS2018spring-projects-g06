@@ -40,7 +40,7 @@ Austin T. Clements等人在2013年提出的Commuter [2]能够利用上面提到�
 
 #### 1. 准备开发环境 — 第6周
 
-把RV64 SMP的工具链，包括编译器GCC、模拟器CPU等环境准备好。
+把RV64 SMP的工具链，包括编译器GCC、模拟器QEMU等环境准备好。
 
 这是基础性的工作，为进行RV64的开发，必不可少。
 
@@ -187,7 +187,7 @@ Commuter的提出可以帮助我们分析和设计系统调用的行为描述，
 
 更进一步地，针对在行为描述层面证明可以被并行的系统调用序列，作者利用TestGen工具生成了相应的测试代码，并在实际操作系统（sv6和Linux）中利用MTrace工具运行测试代码，以此来检测系统调是否因为不必要的存储共享降低了os的并行性，同时帮助定位了OS并行性的瓶颈。最后，针对测试代码的结果，作者给出了几个可以帮助提升os并行性的例子。
 
-总的来说，Commuter的核心设计分成了三个部分Analyzer、TestGen、MTrace，其中Analyzer负责分析系统调用序列是否满足SIM条件，针对系统调用序列中满足条件的path condition，传递给TestGen；TestGen针对这些path condition实例化测试代码`TestGen.c`；MTrace运行在CPU的修改版本，额外记录了操作系统访问物理内存的信息，MTrace通过分析是否有缓冲行的访问冲突来判断实际os的系统调用之间的并行性。原文中也提到充分理解Commuter是一件极其困难的事情，因为它涉及了许多的知识，例如符号化执行，z3求解。此外，更加令人头疼的是，限于篇幅，许多概念和细节，作者并没有真正阐释清楚，例如5.2 TESTGEN章节关于assignments同构这一概念和对于conflict coverage代码的实现。以下，我们将从Commuter的这三个部分分别展开详细论述他们的设计与实现，方便后人继续深入研究Commuter工具。
+总的来说，Commuter的核心设计分成了三个部分Analyzer、TestGen、MTrace，其中Analyzer负责分析系统调用序列是否满足SIM条件，针对系统调用序列中满足条件的path condition，传递给TestGen；TestGen针对这些path condition实例化测试代码`TestGen.c`；MTrace运行在QEMU的修改版本，额外记录了操作系统访问物理内存的信息，MTrace通过分析是否有缓冲行的访问冲突来判断实际os的系统调用之间的并行性。原文中也提到充分理解Commuter是一件极其困难的事情，因为它涉及了许多的知识，例如符号化执行，z3求解。此外，更加令人头疼的是，限于篇幅，许多概念和细节，作者并没有真正阐释清楚，例如5.2 TESTGEN章节关于assignments同构这一概念和对于conflict coverage代码的实现。以下，我们将从Commuter的这三个部分分别展开详细论述他们的设计与实现，方便后人继续深入研究Commuter工具。
 
 
 ##### Analyzer
@@ -404,23 +404,28 @@ Mtrace的代码仓库在[16]中，核心代码是`mtrace.c`中的`mtrace_ld`、`
 
 #### Commuter分析与理解
 
-此部分成果体现在上面几节对于Commuter的详细分析中。
+此部分成果体现在上面几节对于Commuter的详细分析和阐述中。
 
 #### 基于Commuter对POSIX socket API建模
 
-
+我们还基于Commuter对POSIX socket API的UDP（协议）部分进行了建模，目前的模型描述了从传输层到应用层的socket的行为，未来还可以用此模型对实际操作系统的网络子模块进行并行性测试与优化。
 
 ### 实验收获
 
 在本次课程设计中，我们：
 
-* 熟悉了RV64指令集
+* 熟悉了RV64指令集及其工具链
+* 进一步熟悉了x86-64指令集
+* 了解了sv6
+* 了解了C++运行时环境的设计
+* 了解了RV64的代码模型
+* 了解了Berkeley Boot Loader的设计与实现
 * 熟悉并经历了一个多核操作系统的移植过程
 * 学习了符号化执行方法
 * 学习了Z3 SMT求解器的使用方法
-* 了解了sv6
-* 深入了解了Commuter
-* 了解了socket
+* 深入理解了Commuter各个子模块的设计与实现
+* 较为深入地了解了POSIX socket API
+* 简单了解了QEMU模拟器的设计与实现
 
 ### 心得体会
 
