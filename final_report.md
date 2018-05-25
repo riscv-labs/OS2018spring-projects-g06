@@ -387,7 +387,29 @@ Mtrace的代码仓库在[16]中，核心代码是`mtrace.c`中的`mtrace_ld`、`
 
 #### 基于Commuter对POSIX socket API建模
 
+代码见GitHub仓库：https://github.com/twd2/commuter 。
 
+我们只添加了一个文件：`models/socket.py`，接下来我们会详细解释模型的建立：
+
+注：我们在这里实现的socket模型，比较简单，仅仅对socket在应用层和部分传输层的行为进行了建模。
+
+考虑到tcp的协议状态机太过于复杂，我们选择了对无连接不可靠的udp进行建模，主要建模的系统调用有9个，分别是：socket，read，write，connect，bind，listen，accept，shutdown以及close。
+
+我们首先介绍socket总体设计：
+
+socket中需要维护两个缓冲队列，一个负责缓冲socket接收到的数据，另一个负责缓冲socket需要发送的数据，socket还保存了它感兴趣的远程地址和远程端口号。每个进程中。会维护一个整数到socket的映射`fd_map`，在创建socket的时候会返回其对应的整数，而对于其他系统调用，会有一个输入参数是socket对应的整数。此外，我们还需要维护一个全局的表，表里面存放的是哪些进程对哪些UDP端口接收到的数据感兴趣。
+
+我们接下来对每个系统调用的建立进行论述：
+
+1. socket：首先检查参数合法性，然后创建socket即可。
+2. read：首先进行相关检查，然后从接收缓冲队列中取出一个数据包。
+3. write：首先进行相关检查，然后向发送缓冲队列中放入一个数据包。
+4. connect：首先进行相关检查，并设定自己感兴趣的远程地址和远程端口号。
+5. bind：首先进行相关检查，设定自己的地址和端口号并修改全局的表，告诉操作系统当前进程对该端口号感兴趣。
+6. listen：首先进行相关检查，UDP不支持listen系统调用，直接返回错误码。
+7. accept：首先进行相关检查，UDP不支持accept系统调用，直接返回错误码。
+8. shutdown：首先进行相关检查，然后关闭socket。
+9. close：首先进行相关检查，从全局的表中移除bind系统调用添加的信息，然后从`fd_map`中移除相应的整数到socket的映射。
 
 ## 结束语
 
