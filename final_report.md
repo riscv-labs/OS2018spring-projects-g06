@@ -40,7 +40,7 @@ Austin T. Clements等人在2013年提出的Commuter [2]能够利用上面提到�
 
 #### 1. 准备开发环境 — 第6周
 
-把RV64 SMP的工具链，包括编译器GCC、模拟器QEMU等环境准备好。
+把RV64 SMP的工具链，包括编译器GCC、模拟器CPU等环境准备好。
 
 这是基础性的工作，为进行RV64的开发，必不可少。
 
@@ -187,7 +187,7 @@ Commuter的提出可以帮助我们分析和设计系统调用的行为描述，
 
 更进一步地，针对在行为描述层面证明可以被并行的系统调用序列，作者利用TestGen工具生成了相应的测试代码，并在实际操作系统（sv6和Linux）中利用MTrace工具运行测试代码，以此来检测系统调是否因为不必要的存储共享降低了os的并行性，同时帮助定位了OS并行性的瓶颈。最后，针对测试代码的结果，作者给出了几个可以帮助提升os并行性的例子。
 
-总的来说，Commuter的核心设计分成了三个部分Analyzer、TestGen、MTrace，其中Analyzer负责分析系统调用序列是否满足SIM条件，针对系统调用序列中满足条件的path condition，传递给TestGen；TestGen针对这些path condition实例化测试代码`TestGen.c`；MTrace运行在QEMU的修改版本，额外记录了操作系统访问物理内存的信息，MTrace通过分析是否有缓冲行的访问冲突来判断实际os的系统调用之间的并行性。原文中也提到充分理解Commuter是一件极其困难的事情，因为它涉及了许多的知识，例如符号化执行，z3求解。此外，更加令人头疼的是，限于篇幅，许多概念和细节，作者并没有真正阐释清楚，例如5.2 TESTGEN章节关于assignments同构这一概念和对于conflict coverage代码的实现。以下，我们将从Commuter的这三个部分分别展开详细论述他们的设计与实现，方便后人继续深入研究Commuter工具。
+总的来说，Commuter的核心设计分成了三个部分Analyzer、TestGen、MTrace，其中Analyzer负责分析系统调用序列是否满足SIM条件，针对系统调用序列中满足条件的path condition，传递给TestGen；TestGen针对这些path condition实例化测试代码`TestGen.c`；MTrace运行在CPU的修改版本，额外记录了操作系统访问物理内存的信息，MTrace通过分析是否有缓冲行的访问冲突来判断实际os的系统调用之间的并行性。原文中也提到充分理解Commuter是一件极其困难的事情，因为它涉及了许多的知识，例如符号化执行，z3求解。此外，更加令人头疼的是，限于篇幅，许多概念和细节，作者并没有真正阐释清楚，例如5.2 TESTGEN章节关于assignments同构这一概念和对于conflict coverage代码的实现。以下，我们将从Commuter的这三个部分分别展开详细论述他们的设计与实现，方便后人继续深入研究Commuter工具。
 
 ##### Analyzer
 
@@ -389,27 +389,7 @@ Mtrace的代码仓库在[16]中，核心代码是`mtrace.c`中的`mtrace_ld`、`
 
 代码见GitHub仓库：https://github.com/twd2/commuter 。
 
-我们只添加了一个文件：`models/socket.py`，接下来我们会详细解释模型的建立：
-
-注：我们在这里实现的socket模型，比较简单，仅仅对socket在应用层和部分传输层的行为进行了建模。
-
-考虑到tcp的协议状态机太过于复杂，我们选择了对无连接不可靠的udp进行建模，主要建模的系统调用有9个，分别是：socket，read，write，connect，bind，listen，accept，shutdown以及close。
-
-我们首先介绍socket总体设计：
-
-socket中需要维护两个缓冲队列，一个负责缓冲socket接收到的数据，另一个负责缓冲socket需要发送的数据，socket还保存了它感兴趣的远程地址和远程端口号。每个进程中。会维护一个整数到socket的映射`fd_map`，在创建socket的时候会返回其对应的整数，而对于其他系统调用，会有一个输入参数是socket对应的整数。此外，我们还需要维护一个全局的表，表里面存放的是哪些进程对哪些UDP端口接收到的数据感兴趣。
-
-我们接下来对每个系统调用的建立进行论述：
-
-1. socket：首先检查参数合法性，然后创建socket即可。
-2. read：首先进行相关检查，然后从接收缓冲队列中取出一个数据包。
-3. write：首先进行相关检查，然后向发送缓冲队列中放入一个数据包。
-4. connect：首先进行相关检查，并设定自己感兴趣的远程地址和远程端口号。
-5. bind：首先进行相关检查，设定自己的地址和端口号并修改全局的表，告诉操作系统当前进程对该端口号感兴趣。
-6. listen：首先进行相关检查，UDP不支持listen系统调用，直接返回错误码。
-7. accept：首先进行相关检查，UDP不支持accept系统调用，直接返回错误码。
-8. shutdown：首先进行相关检查，然后关闭socket。
-9. close：首先进行相关检查，从全局的表中移除bind系统调用添加的信息，然后从`fd_map`中移除相应的整数到socket的映射。
+我们只添加了一个文件：`/models/socket.py`
 
 ## 结束语
 
@@ -457,7 +437,7 @@ socket中需要维护两个缓冲队列，一个负责缓冲socket接收到的�
 
 本次课程设计对我来说一次非常好的锻炼，尤其是Commuter部分，十分有意思而且富有挑战性。通过分析和理解Commuter的设计和实现，让我阅读论文和大工程代码的能力得到了极大的提升。比较可惜的是，因为时间有限，我们最终并没有将基于Commuter的POSIX socket API模型投入TestGen生成测试代码，让其可以在真实os上跑起来。
 
-另外值得一提的是，由于看Commuter太入迷了，最近用git上传代码的时候，我都把`git commit`给打成了`git commuter`了。
+另外值得一提的是，由于看Commuter太入迷了，最近用git上传代码的时候，我都把`git commit`给打成了`git commute`了。
 
 ### 未来的工作
 
