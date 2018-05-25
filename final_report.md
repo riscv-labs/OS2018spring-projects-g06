@@ -433,7 +433,9 @@ Mtrace的代码仓库在[16]中，核心代码是`mtrace.c`中的`mtrace_ld`、`
 
 #### 尹宇峰
 
+本次课程设计对我来说一次非常好的锻炼，尤其是Commuter部分，十分有意思而且富有挑战性。通过分析和理解Commuter的设计和实现，让我阅读论文和大工程代码的能力得到了极大的提升。比较可惜的是，因为时间有限，我们最终并没有将基于Commuter的POSIX socket API模型投入TestGen生成测试代码，让其可以在真实os上跑起来。
 
+另外值得一提的是，由于看Commuter太入迷了，最近用git上传代码的时候，我都把`git commit`给打成了`git commuter`了。
 
 ### 未来的工作
 
