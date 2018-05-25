@@ -289,7 +289,7 @@ $$ E_i(a_1, a_2, ..., a_m) = E_j(a_1, a_2, ..., a_m) \iff E_i(b_1, b_2, ..., b_m
 我们先将Assignments的变量信息展示出来：
 
 ```
-Assignments1:
+Assignments 1:
 defaultdict(<type 'list'>,
   {
   <testgen.Interpreter object at 0x7f71fb8b4810>: 
@@ -312,7 +312,7 @@ defaultdict(<type 'list'>,
   }
 )
 
-Assignments2:
+Assignments 2:
 defaultdict(<type 'list'>,
   {
   <testgen.Interpreter object at 0x7f4e0c8e6ad0>: 
@@ -338,7 +338,7 @@ defaultdict(<type 'list'>,
 )
 ```
 
-我们可以看到每一个assignment都是一个list，list的元素是字典，字典的key值不是我们所关心的东西，而value值就是我们的同构概念中的表达式和他们对应的取值。例如：
+我们可以看到每一个assignment都是一个字典，字典的key不是我们所关心的东西，而value是一个列表，列表的每一项就是我们的同构概念中的表达式和他们对应的取值。例如：
 
 ```
 [(Fs.proc0.fd_map._map.inum[a.close.fd], SInum!val!1), 
@@ -347,11 +347,11 @@ defaultdict(<type 'list'>,
 
 `Fs.proc0.fd_map._map.inum[a.close.fd]`和`Fs.proc0.fd_map._map.inum[b.close.fd]`是表达式，`SInum!val!1`和`SInum!val!0`是对应的表达式取值。
 
-我们可以看到通过构造不同构的参数赋值，assignments1中`Fs.proc0.fd_map._map.inum[a.close.fd]`和`Fs.proc0.fd_map._map.inum[b.close.fd]`的取值是相等的，而assignments2中则是不同的。
+我们可以看到通过构造不同构的参数赋值，assignments 1中`Fs.proc0.fd_map._map.inum[a.close.fd]`和`Fs.proc0.fd_map._map.inum[b.close.fd]`的取值是相等的，而assignments 2中则是不同的。
 
-具体而言，我们来解释一下表达式`Fs.proc0.fd_map._map.inum[a.close.fd]`的含义：`fd_map`是文件描述符号对文件描述符的映射，`inum`是文件描述符的inode号，整个表达式的含义是取文件描述符号对应的文件的inode号。我们容易知道，访问同一个inode会造成访问冲突，而不同的inode访问则可以并行化，所以在这里我们遍历了不同的访问模式，也就回答了我们的第一个问题。
+具体而言，我们来解释一下表达式`Fs.proc0.fd_map._map.inum[a.close.fd]`的含义：`fd_map`是文件描述符号对文件描述符的映射，`inum`是文件描述符的inode号，整个表达式的含义是取文件描述符号对应的文件的inode号。我们容易知道，访问同一个inode会造成访问冲突，而不同的inode访问则可以并行化，所以在这里我们遍历了不同的访问模式，从而实现了conflict coverage，也就回答了我们的第一个问题。
 
-然后是第二个问题，这个问题有些复杂，表达式产生的方式是多样的，我们只选其中一种进行论述，选取的表达式是`Fs.proc0.fd_map._map.inum[a.close.fd]`。而这个表达式的产生涉及到了Commuter中符号化执行的引擎实现，符号化执行的引擎实现的字典中，key值和value值都是符号化变量表示的，所以判断一个给定的符号化变量是否在这个字典中，返回的也是一个符号化的表达式，而返回的value值也是一个符号化的表达式。TestGen会自动记录下这些返回的表达式，例如`Fs.proc0.fd_map._map.inum[a.close.fd]`，作为后续遍历访问模式的重要的部分。
+然后是第二个问题，这个问题有些复杂，表达式产生的方式是多样的，我们只选其中一种进行论述，选取的表达式是`Fs.proc0.fd_map._map.inum[a.close.fd]`。而这个表达式的产生涉及到了Commuter中符号化执行引擎的实现，符号化执行引擎实现的字典中，key和value都是符号化变量表示的，所以判断一个给定的符号化变量是否在这个字典中，返回的也是一个符号化的表达式，而返回的对应某个key的value也是一个符号化的表达式。TestGen会自动记录下这些返回的表达式，例如`Fs.proc0.fd_map._map.inum[a.close.fd]`，作为后续遍历访问模式的重要的部分。
 
 ##### MTrace
 
