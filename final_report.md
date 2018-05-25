@@ -198,6 +198,92 @@ $$ \forall i \not= j \in \{1, 2, ..., n\} $$
 
 $$ E_i(a_1, a_2, ..., a_m) = E_j(a_1, a_2, ..., a_m) \iff E_i(b_1, b_2, ..., b_m) = E_j(b_1, b_2, ..., b_m)$$
 
+我们先只叙述TestGen的实现方法，而方法的正确性在后续给出。为了实现conflict coverage，我们需要针对一条path取多组参数赋值，以遍历所有的访问模式，为此，我们需要这些参数赋值两两不同构。
+
+具体而言，针对一组参数赋值和给定的表达式集合，我们可以求解与这组参数赋值同构的条件，然后将该条件取非再与path condition取并，更新为新的path condition，然后求解得到一组新的参数赋值，那么这组的赋值就一定与原先的参数赋值不同构。我们反复迭代这个过程，直到我们得到一定数量的参数赋值（一条code path对应的参数赋值组数有最大限制）或是说path condition已经无解的时候。
+
+那么，我们来重新梳理一下TestGen的流程逻辑：
+
+1. 简单的path coverage有时候无法发现潜在的并行化问题，所以我们需要conflict coverage遍历所有的访问模式。
+2. 为了实现conflict，我们引入了assignment同构的概念，然后确定了一组表达式的集合（如何产生这些表达式将在后续代码讨论中讲解）。
+3. 基于上述讨论，我们通过一组参数赋值可以求解与它同构的条件，然后将这个条件取非，再与path condition取并更新为新的path condition，以便得到一组与原参数赋值不同构的新参数赋值。
+4. 我们反复更新path condition，这样可以得到一系列参数赋值，使得他们两两不同构。
+5. 然后我们就可以通过这些实例化的参数赋值生成实际的c测试代码，而且是conflict coverage级别的，对于潜在并行化问题有更强的针对性。
+
+接下来，我们通过讨论TestGen的代码实现（testgen.py和spec.py）来回答仅剩的两个问题：
+
+1. 为什么同构概念的引入就可以实现conflict coverage？
+2. 同构概念中的表达式集合从哪里来的？
+
+之前也说过，我们阅读TestGen的代码有极大的困难：杂乱的代码注释，复杂的函数调用关系，以及python本身欠缺的类型声明的语法特性。因此，我们决定通过动态输出变量信息的方法快速理解TestGen的代码实现，而且顺便修复了其中的两个小bug。（显然作者并没有针对verbose输出模式的commuter代码进行检查）
+
+我们先将Assignments的变量信息展示出来：
+
+```
+Assignments1:
+defaultdict(<type 'list'>,
+  {
+  <testgen.Interpreter object at 0x7f71fb8b4810>: 
+  [(Fs.proc0.fd_map._map.inum[a.close.fd], SInum!val!0), 
+  (Fs.proc0.fd_map._map.inum[b.close.fd], SInum!val!0)],
+
+  None:
+  [(a.close.pid, False), (b.close.pid, False), 
+  (Fs.proc0.fd_map._valid[a.close.fd], True), 
+  (Fs.proc0.fd_map._valid[b.close.fd], True), 
+  (Fs.proc0.fd_map._map.ispipe[a.close.fd], False), 
+  (Fs.proc0.fd_map._map.ispipe[b.close.fd], False)],
+
+  <testgen.Interpreter object at 0x7f71fb8b4e50>:
+  [(a.close.fd, 0), (b.close.fd, 1)],
+
+  <testgen.Interpreter object at 0x7f71fb8b4890>: 
+  [(Fs.proc0.fd_map._map.off[a.close.fd], 2), 
+  (Fs.proc0.fd_map._map.off[b.close.fd], 2)]
+  }
+)
+
+Assignments2:
+defaultdict(<type 'list'>,
+  {
+  <testgen.Interpreter object at 0x7f4e0c8e6ad0>: 
+  [(Fs.proc0.fd_map._map.pipeid[a.close.fd], SPipeId!val!0), 
+  (Fs.proc0.fd_map._map.pipeid[b.close.fd], SPipeId!val!0)],
+
+  None: 
+  [(a.close.pid, False), (b.close.pid, False), 
+  (Fs.proc0.fd_map._valid[a.close.fd], True), 
+  (Fs.proc0.fd_map._valid[b.close.fd], True), 
+  (Fs.proc0.fd_map._map.ispipe[a.close.fd], True), 
+  (Fs.proc0.fd_map._map.pipewriter[a.close.fd], False), 
+  (Fs.proc0.fd_map._map.ispipe[b.close.fd], True), 
+  (Fs.proc0.fd_map._map.pipewriter[b.close.fd], False)],
+
+  <testgen.Interpreter object at 0x7f4e0c8e6d50>: 
+  [(a.close.fd, 2), (b.close.fd, 3)],
+
+  <testgen.Interpreter object at 0x7f4e0c8fc8d0>: 
+  [(Fs.proc0.fd_map._map.inum[a.close.fd], SInum!val!1), 
+  (Fs.proc0.fd_map._map.inum[b.close.fd], SInum!val!0)]
+  }
+)
+```
+
+我们可以看到每一个assignment都是一个list，list的元素是字典，字典的key值不是我们所关心的东西，而value值就是我们的同构概念中的表达式和他们对应的取值。例如：
+
+```
+[(Fs.proc0.fd_map._map.inum[a.close.fd], SInum!val!1), 
+(Fs.proc0.fd_map._map.inum[b.close.fd], SInum!val!0)]
+```
+
+`Fs.proc0.fd_map._map.inum[a.close.fd]`和`Fs.proc0.fd_map._map.inum[b.close.fd]`是表达式，`SInum!val!1`和`SInum!val!0`是对应的表达式取值。
+
+我们可以看到通过构造不同构的参数赋值，assignments1中`Fs.proc0.fd_map._map.inum[a.close.fd]`和`Fs.proc0.fd_map._map.inum[b.close.fd]`的取值是相等的，而assignments2中则是不同的。
+
+具体而言，我们来解释一下表达式`Fs.proc0.fd_map._map.inum[a.close.fd]`的含义：`fd_map`是文件描述符号对文件描述符的映射，`inum`是文件描述符的inode号，整个表达式的含义是取文件描述符号对应的文件的inode号。我们容易知道，访问同一个inode会造成访问冲突，而不同的inode访问则可以并行化，所以在这里我们遍历了不同的访问模式，也就回答了我们的第一个问题。
+
+然后是第二个问题，这个问题有些复杂，表达式产生的方式是多样的，我们只选其中一种进行论述，选取的表达式是`Fs.proc0.fd_map._map.inum[a.close.fd]`。而这个表达式的产生涉及到了Commuter中符号化执行的引擎实现，符号化执行的引擎实现的字典中，key值和value值都是符号化变量表示的，所以判断一个给定的符号化变量是否在这个字典中，返回的也是一个符号化的表达式，而返回的value值也是一个符号化的表达式。TestGen会自动记录下这些返回的表达式，例如`Fs.proc0.fd_map._map.inum[a.close.fd]`，作为后续遍历访问模式的重要的部分。
+
 ##### MTrace
 
 本小节根据[2]中的文献5. Analyzing interfaces using COMMUTER和5.3 MTRACE章节整理得到。
